@@ -50,7 +50,7 @@ while jogando:
         jogador_y -= jogador_velocidade # == mesma coisa so q pro eixo y
 
     if teclas[pygame.K_DOWN]:
-        jogador_y += jogador_velocidade # == mesma coisa
+        jogador_y += jogador_velocidade # == 
 
     #prenchendo a tela
     tela.blit(background, (0, 0))
