@@ -1,2 +1,25 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+#inciar game
+
+import pygame
+from sys import exit
+
+pygame.init()
+largura = 800
+altura = 500
+cor_preta = (0, 0, 0)
+
+tela = pygame.display.set_mode((largura, altura))
+
+while True:
+    tela.fill(cor_preta)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+    pygame.display.flip()
+
+
