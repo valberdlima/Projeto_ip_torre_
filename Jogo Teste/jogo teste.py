@@ -1,6 +1,8 @@
 #instala o pygame com pip install pygame ou py -m pip install pygame
+
 #importa o pygame
 import pygame
+pygame.mixer.quit()
 
 #inicia o pygame
 pygame.init()
@@ -11,7 +13,7 @@ tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption('Jogo teste')
 
 # Carregar imagem de fundo
-background = pygame.image.load("mapa teste.jpg")  
+background = pygame.image.load("Jogo Teste/mapa teste.jpg")  
 background = pygame.transform.scale(background, (LARGURA, ALTURA))
 
 #cores (rgb)
@@ -63,5 +65,3 @@ while jogando:
 
 #encerrar o game
 pygame.quit()
-
-
