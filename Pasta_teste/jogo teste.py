@@ -24,7 +24,7 @@ PRETO = (0, 0, 0)
 #config do boneco
 jogador_tamanho = 30
 jogador_x = LARGURA // 2 #posição inicial dele no eixo x
-jogador_y = ALTURA // 2 # == eixo y
+jogador_y = ALTURA // 2 # eixo y
 jogador_velocidade = 5
 
 #rodar o jogo
@@ -47,10 +47,10 @@ while jogando:
         jogador_x += jogador_velocidade #se ele apertar a setinha p direita a posição dele no eixo x vai aumentar 
 
     if teclas[pygame.K_UP]:
-        jogador_y -= jogador_velocidade # == mesma coisa so q pro eixo y
+        jogador_y -= jogador_velocidade # mesma coisa so q pro eixo y
 
     if teclas[pygame.K_DOWN]:
-        jogador_y += jogador_velocidade # == 
+        jogador_y += jogador_velocidade 
 
     #prenchendo a tela
     tela.blit(background, (0, 0))
