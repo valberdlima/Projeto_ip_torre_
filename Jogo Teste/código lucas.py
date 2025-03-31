@@ -23,6 +23,9 @@ jogador_velocidade = 5
 
 img_sprites = pygame.transform.scale(pygame.image.load("emanoel 2.0.png"), (1664, 6912))
 
+coletavel = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
+coletavel.set_colorkey((0, 0, 0))
+
 sprites = [
     [img_sprites.subsurface((i * jogador_tamanho, 8 * jogador_tamanho, jogador_tamanho, jogador_tamanho)) for i in range(9)],
     [img_sprites.subsurface((i * jogador_tamanho, 9 * jogador_tamanho, jogador_tamanho, jogador_tamanho)) for i in range(9)],
@@ -39,6 +42,8 @@ anim_atual = 0
 conta_mzr = 0
 taxa = 2
 
+coletou = False
+
 while jogando:
     movendo = False
     for event in pygame.event.get():
@@ -52,7 +57,7 @@ while jogando:
         conta_mzr += 1
         movendo = True
 
-    if teclas[pygame.K_RIGHT] and jogador_x < (1280 - jogador_tamanho):
+    if teclas[pygame.K_RIGHT] and jogador_x < (1320):
         jogador_x += jogador_velocidade
         sprite_atual = 3
         conta_mzr += 1
@@ -77,10 +82,19 @@ while jogando:
             anim_atual = (anim_atual + 1) % len(sprites[sprite_atual])
     else:
         anim_atual = 0  # Volta para o primeiro frame quando para de se mover
-    
+
+    # Verificar colisão do personagem com o item
+    jogador_rect = sprites[sprite_atual][anim_atual].get_rect(topleft=(jogador_x, jogador_y))  # Define o retângulo com base na posição do jogador
+
+    if not coletou and jogador_rect.colliderect(coletavel.get_rect(topleft=(800, 800))):  # A posição do item coletável
+        coletou = True
+  
     # Renderização do mapa
     tela.blit(mapas[mapa_atual], (0, 0))
     tela.blit(sprites[sprite_atual][anim_atual], (jogador_x, jogador_y))
+
+    if not coletou:
+        tela.blit(coletavel, (800, 800))
     
     # Transição de mapa
     if mapa_atual == "mapa inicial" and jogador_y <= 0:
