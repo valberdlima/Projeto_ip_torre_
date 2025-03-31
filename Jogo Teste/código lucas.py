@@ -9,8 +9,8 @@ pygame.display.set_caption("Game Teste")
 
 # Dicionário com os mapas
 mapas = {
-    "mapa inicial": pygame.transform.scale(pygame.image.load("Projeto_ip_torre_\Jogo Teste\mapa 1.png"), (1440, 960)),
-    "mapa praia": pygame.transform.scale(pygame.image.load("Projeto_ip_torre_\Jogo Teste\mapa 2.png"), (1440, 960))
+    "mapa inicial": pygame.transform.scale(pygame.image.load("mapa 1.png"), (1440, 960)),
+    "mapa praia": pygame.transform.scale(pygame.image.load("mapa 2.png"), (1440, 960))
 }
 
 # Criando o clock do FPS
@@ -21,9 +21,9 @@ jogador_x = 1280 // 2 - jogador_tamanho // 2
 jogador_y = 960 // 2 - jogador_tamanho // 2 
 jogador_velocidade = 5
 
-img_sprites = pygame.transform.scale(pygame.image.load("Projeto_ip_torre_\emanoel 2.0.png"), (1664, 6912))
+img_sprites = pygame.transform.scale(pygame.image.load("emanoel 2.0.png"), (1664, 6912))
 
-coletavel = pygame.transform.scale(pygame.image.load("Projeto_ip_torre_\hamburger 2.0.png"), (64, 64))
+coletavel = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
 coletavel.set_colorkey((0, 0, 0))
 
 sprites = [
