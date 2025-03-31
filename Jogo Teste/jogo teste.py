@@ -6,6 +6,13 @@ pygame.mixer.quit()
 
 #inicia o pygame
 pygame.init()
+pygame.mixer.init()
+
+#musica de fundo
+pygame.mixer.music.set_volume(0.1)
+musica = pygame.mixer.music.load("H:\Projeto IP\Projeto_ip_torre_-1\Jogo Teste\musica_fundo.mp3")
+pygame.mixer.music.play(-1)
+
 
 #tem que configurar a tela 
 LARGURA, ALTURA = 800, 600
