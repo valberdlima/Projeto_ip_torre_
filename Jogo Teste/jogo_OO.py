@@ -13,7 +13,7 @@ clock = pygame.time.Clock()  # controla a atualização do jogo
 
 # carrega as imagens do mapa e do jogador
 mapas = {
-    "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.jpg"), (Largura, Altura)),
+    "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
     "segundo mapa": pygame.transform.scale(pygame.image.load("mapa_2.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (1664, 6912))
