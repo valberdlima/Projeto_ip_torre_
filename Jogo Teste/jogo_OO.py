@@ -2,148 +2,178 @@
 import pygame 
 
 # configuracoes basicas do jogo
-Largura, Altura = 1440, 960  # define o tamanho da tela
-player_velocidade = 5  # define a velocidade do jogador
-FPS = 60  # controla a velocidade da animacao
+Largura, Altura = 1440, 960
+player_velocidade = 5
+FPS = 60
 
-# iniciando o jogo
-pygame.init()  # inicia o pygame
-tela = pygame.display.set_mode((Largura, Altura))  # cria a tela do jogo
-clock = pygame.time.Clock()  # controla a atualização do jogo
+pygame.init()
+tela = pygame.display.set_mode((Largura, Altura))
+clock = pygame.time.Clock()
 
-# carrega as imagens do mapa e do jogador
+# carrega as imagens
 mapas = {
     "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
     "segundo mapa": pygame.transform.scale(pygame.image.load("mapa_2.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (1664, 6912))
 
-# funcao para cortar as sprites do arquivo
 def get_sprites(sheet, linhas, colunas, largura, altura):
     sprites = []
     for linha in range(linhas):
         for coluna in range(colunas):
             x = coluna * largura
             y = linha * altura
-            sprite = sheet.subsurface(pygame.Rect(x, y, largura, altura))  # recorta o sprite
+            sprite = sheet.subsurface(pygame.Rect(x, y, largura, altura))
             sprites.append(sprite)
     return sprites  
 
-# configura a spritesheet (que eh basicamente a matriz das sprites: essa é 54x13 comecando do 0)
 SPRITE_Largura, SPRITE_Altura = 128, 128 
 sprites = get_sprites(player_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)  
 
-# indices das animacoes (ex: 130-139 = andar para baixo ou 117-126 = andar para esquerda etc)
 ANIM_Baixo = sprites[130:139]  
 ANIM_Esquerda = sprites[117:126]  
 ANIM_Direita = sprites[143:152]  
 ANIM_Cima = sprites[104:113]
 
-# classe do jogador
-class Player:
-    
-    # inicializa o jogador na posicao (x, y)
-    def __init__(self, x, y):
-        self.x = x  # posicao horizontal do jogador
-        self.y = y  # posicao vertical do jogador
-        self.frame = 0  # controla qual frame da animação esta sendo mostrado
-        self.direcao = ANIM_Baixo  # comeca parado olhando para frente
-        
-    # funcao para mover o jogador
-    def move(self, keys):
-        movendo = False  # variavel bool para saber se o jogador esta se movendo
+# Configuração de fonte para mensagens
+fonte = pygame.font.SysFont("arial", 40)
 
-        if keys[pygame.K_LEFT]:  # se a seta esquerda for pressionada
-            self.x -= player_velocidade  # move para a esquerda
+class Player:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.frame = 0
+        self.direcao = ANIM_Baixo
+        
+    def move(self, keys):
+        movendo = False
+        if keys[pygame.K_LEFT]:
+            self.x -= player_velocidade
             self.direcao = ANIM_Esquerda
             movendo = True
-            
-        if keys[pygame.K_RIGHT]:  # se a seta direita for pressionada
-            self.x += player_velocidade  # move para a direita
+        if keys[pygame.K_RIGHT]:
+            self.x += player_velocidade
             self.direcao = ANIM_Direita
             movendo = True
-            
-        if keys[pygame.K_UP]:  # se a seta para cima for pressionada
-            self.y -= player_velocidade  # move para cima
+        if keys[pygame.K_UP]:
+            self.y -= player_velocidade
             self.direcao = ANIM_Cima
             movendo = True
-            
-        if keys[pygame.K_DOWN]:  # se a seta para baixo for pressionada
-            self.y += player_velocidade  # move para baixo
+        if keys[pygame.K_DOWN]:
+            self.y += player_velocidade
             self.direcao = ANIM_Baixo
             movendo = True
+        if movendo:
+            self.frame = (self.frame + 1) % len(self.direcao)
 
-        if movendo:  
-            self.frame = (self.frame + 1) % len(self.direcao)  # muda o frame da animacao
-
-    # funcao para desenhar o jogador na tela
-    def draw(self, screen):  
+    def draw(self, screen):
         screen.blit(self.direcao[self.frame], (self.x, self.y))
 
-# classe do jogo
 class Game:
-    
     def __init__(self):
-        # inicia as variais do jogo
         self.tela = pygame.display.set_mode((Largura, Altura))
         pygame.display.set_caption("A Ordem dos Discretos")
         self.clock = pygame.time.Clock()
         self.running = True
-        
-        self.mapa_atual = "primeiro mapa"  # define o mapa atual
-        # cria o jogador
+        self.mapa_atual = "primeiro mapa"
         self.player = Player(Largura // 2, Altura // 2)
-        
-        # cria o coletavel
-        self.coletavel = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
-        self.coletavel.set_colorkey((0, 0, 0)) # tira o fundo preto da imagem do coletavel
-        self.coletou = False
+
+        # Carrega o coletável
+        self.coletavel_img = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
+        self.coletavel_img.set_colorkey((0, 0, 0))
+
+        # Coletáveis por mapa
+        self.coletaveis = {
+            "primeiro mapa": [
+                {"pos": (800, 800), "coletado": False},
+                {"pos": (200, 300), "coletado": False},
+                {"pos": (1200, 500), "coletado": False}
+            ],
+            "segundo mapa": [
+                {"pos": (600, 400), "coletado": False},
+                {"pos": (1000, 700), "coletado": False}
+            ]
+        }
+
+        # Variáveis para mensagens
+        self.mensagem_tempo = 0
+        self.mensagem_texto = ""
+
+    def mostrar_mensagem(self, texto, duracao):
+        self.mensagem_texto = texto
+        self.mensagem_tempo = duracao
+
+    def desenhar_mensagem(self):
+        if self.mensagem_tempo > 0:
+            # Define a posição e tamanho da caixa de mensagem
+            caixa_largura, caixa_altura = Largura // 2, Altura // 6
+            caixa_x, caixa_y = Largura // 4, Altura // 3
+            # Desenha o retângulo de fundo
+            pygame.draw.rect(self.tela, (50, 50, 50), (caixa_x, caixa_y, caixa_largura, caixa_altura))
+            # Renderiza o texto e centraliza dentro da caixa
+            texto_surface = fonte.render(self.mensagem_texto, True, (255, 255, 255))
+            texto_rect = texto_surface.get_rect(center=(caixa_x + caixa_largura // 2, caixa_y + caixa_altura // 2))
+            self.tela.blit(texto_surface, texto_rect)
+            self.mensagem_tempo -= 1
+
+    def tela_inicial(self):
+        inicio_tempo = pygame.time.get_ticks()
+        while pygame.time.get_ticks() - inicio_tempo < 3000:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return False
+            self.tela.fill((0, 0, 0))
+            texto_surface = fonte.render("Bem-vindo a A Ordem dos Discretos!", True, (255, 255, 255))
+            texto_rect = texto_surface.get_rect(center=(Largura // 2, Altura // 2))
+            self.tela.blit(texto_surface, texto_rect)
+            pygame.display.update()
+        return True
 
     def game_loop(self):
-        
+        if not self.tela_inicial():
+            return
+
         while self.running:
-            self.clock.tick(FPS)  # define o FPS 
-            
-            # render do mapa e do jogador
-            self.tela.blit(mapas[self.mapa_atual], (0, 0))  # coloca o mapa no fundo da tela
-            keys = pygame.key.get_pressed()  # pega as teclas pressionadas
-            self.player.move(keys)  # move o jogador
-            self.player.draw(self.tela)  # desenha o jogador na tela
+            self.clock.tick(FPS)
+            self.tela.blit(mapas[self.mapa_atual], (0, 0))
+            keys = pygame.key.get_pressed()
+            self.player.move(keys)
+            self.player.draw(self.tela)
 
-            # para cada evento ocorrido na tela (ou seja, uma tecla pressionada), eu verifico se a janela foi fechada 
-            for event in pygame.event.get(): 
-                if event.type == pygame.QUIT:  # se o jogador fechar a janela
-                    self.running = False  # o loop é encerrado
-            
-            # verifica se teve colisao do jogador com o coletavel
-            # aqui eu criei um retangulo para o jogador e verifiquei se ele colide com o retangulo do coletavel (gustavo me deu a ideia)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.running = False
+
+            # Verifica colisão com coletáveis
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
-            
-            # se o jogador colidir com o coletavel e ainda nao tiver coletado, eu mudo a variavel para True
-            if not self.coletou and jogador_rect.colliderect(self.coletavel.get_rect(topleft = (800, 800))): 
-                self.coletou = True
+            for coletavel in self.coletaveis[self.mapa_atual]:
+                if not coletavel["coletado"]:
+                    coletavel_rect = self.coletavel_img.get_rect(topleft=coletavel["pos"])
+                    if jogador_rect.colliderect(coletavel_rect):
+                        coletavel["coletado"] = True
+                        self.mostrar_mensagem("Item coletado!", 120)
 
-            # se o jogador ainda nao coletou, eu coloco o coletavel na tela
-            if not self.coletou:
-                self.tela.blit(self.coletavel, (800, 800))
-                
-            # transicao dos mapas/fases
+            # Desenha coletáveis não coletados
+            for coletavel in self.coletaveis[self.mapa_atual]:
+                if not coletavel["coletado"]:
+                    self.tela.blit(self.coletavel_img, coletavel["pos"])
+
+            # Transição dos mapas
             if self.mapa_atual == "primeiro mapa" and self.player.y <= 0:
                 self.mapa_atual = "segundo mapa"
-                
-                # aqui eu coloco o jogador na parte de baixo do mapa (ou seja, na parte de cima do segundo mapa)
                 self.player.y = Altura - SPRITE_Altura - 20
-            
             if self.mapa_atual == "segundo mapa" and self.player.y >= (Altura - SPRITE_Altura):
                 self.mapa_atual = "primeiro mapa"
-                
-                # aqui eu coloco o jogador na parte de cima do mapa (ou seja, na parte de baixo do segundo mapa)
                 self.player.y = 20
 
-            pygame.display.update()  # atualiza a tela do jogo
+            # Desenha a mensagem se houver
+            self.desenhar_mensagem()
 
-        pygame.quit()  # fecha o pygame
+            pygame.display.update()
 
-# iniciar o jogo
+        pygame.quit()
+
+# Iniciar o jogo
 game = Game()
 game.game_loop()
