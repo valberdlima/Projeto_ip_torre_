@@ -1,4 +1,5 @@
 # importa a biblioteca pygame
+import os
 import pygame 
 
 # configuracoes basicas do jogo
@@ -13,7 +14,7 @@ clock = pygame.time.Clock()
 # carrega as imagens
 mapas = {
     "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
-    "segundo mapa": pygame.transform.scale(pygame.image.load("mapa torre final.png"), (Largura, Altura))
+    "segundo mapa": pygame.transform.scale(pygame.image.load("Mapa torre final.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
 player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
