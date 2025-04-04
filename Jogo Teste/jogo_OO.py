@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 # carrega as imagens
 mapas = {
     "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
-    "segundo mapa": pygame.transform.scale(pygame.image.load("mapa_2.png"), (Largura, Altura))
+    "segundo mapa": pygame.transform.scale(pygame.image.load("mapa torre final.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (1664, 6912))
 
@@ -65,6 +65,9 @@ class Player:
             movendo = True
         if movendo:
             self.frame = (self.frame + 1) % len(self.direcao)
+        
+        else:
+            self.frame = 0
 
     def draw(self, screen):
         screen.blit(self.direcao[self.frame], (self.x, self.y))
