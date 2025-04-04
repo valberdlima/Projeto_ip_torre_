@@ -3,7 +3,7 @@ import pygame
 
 # configuracoes basicas do jogo
 Largura, Altura = 1000, 800
-player_velocidade = 5
+player_velocidade = 4
 FPS = 60
 
 pygame.init()
@@ -16,6 +16,8 @@ mapas = {
     "segundo mapa": pygame.transform.scale(pygame.image.load("mapa torre final.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
+player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
+player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (1536, 4224))
 
 def get_sprites(sheet, linhas, colunas, largura, altura):
     sprites = []
@@ -38,12 +40,23 @@ ANIM_Cima = sprites[104:113]
 # Configuração de fonte para mensagens
 fonte = pygame.font.SysFont("arial", 40)
 
+# Função para atualizar os sprites do jogador
+def atualizar_sprites(player, novo_spritesheet):
+    global ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima
+    sprites = get_sprites(novo_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)
+    ANIM_Baixo = sprites[130:139]
+    ANIM_Esquerda = sprites[117:126]
+    ANIM_Direita = sprites[143:152]
+    ANIM_Cima = sprites[104:113]
+    player.direcao = ANIM_Baixo  # Atualiza a direção atual do jogador
+
 class Player:
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.frame = 0
         self.direcao = ANIM_Baixo
+        self.animacao_contador = 0  # Contador para controlar a animação
 
     def move(self, keys, colisoes):
         movendo = False
@@ -71,10 +84,14 @@ class Player:
         if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
             self.x, self.y = novo_x, novo_y  # Atualiza posição se não houver colisão
 
+        # Controla a taxa de atualização da animação
         if movendo:
-            self.frame = (self.frame + 1) % len(self.direcao)
+            self.animacao_contador += 1
+            if self.animacao_contador % 5 == 0:  # Atualiza o frame a cada 5 ciclos
+                self.frame = (self.frame + 1) % len(self.direcao)
         else:
             self.frame = 0
+            self.animacao_contador = 0  # Reseta o contador quando parado
 
     def draw(self, screen):
         screen.blit(self.direcao[self.frame], (self.x, self.y))
@@ -107,7 +124,7 @@ class Game:
             ],
             "segundo mapa": [
                 # {"pos": (600, 400), "coletado": False},
-                {"pos": (250, 200), "coletado": False},
+                {"pos": (200, 180), "coletado": False},
                 {"pos": (750, 470), "coletado": False}
             ]
         }
@@ -171,12 +188,30 @@ class Game:
 
             # Verifica colisão com coletáveis
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
-            for coletavel in self.coletaveis[self.mapa_atual]:
+            for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
                 if not coletavel["coletado"]:
-                    coletavel_rect = self.coletavel_img2.get_rect(topleft=coletavel["pos"])
-                    if jogador_rect.colliderect(coletavel_rect):
-                        coletavel["coletado"] = True
-                        self.mostrar_mensagem("Item coletado!", 120)
+                    coletavel_rect_bau = self.coletavel_img2.get_rect(topleft=coletavel["pos"])
+                    coletavel_rect_esq = self.coletavel_img4.get_rect(topleft=coletavel["pos"])
+                    if coletavel == self.coletaveis[self.mapa_atual][1]:
+                        if jogador_rect.colliderect(coletavel_rect_bau) and self.coletaveis["segundo mapa"][0]["coletado"]:
+                            coletavel["coletado"] = True
+                            self.mostrar_mensagem("Item coletado!", 120)
+                            
+                            # Troca o spritesheet do jogador com base no coletável
+                            if index == 0:  # Coletável [0]
+                                atualizar_sprites(self.player, player_spritesheet2)
+                            elif index == 1:  # Coletável [1]
+                                atualizar_sprites(self.player, player_spritesheet3)
+                    else:
+                        if jogador_rect.colliderect(coletavel_rect_esq):
+                            coletavel["coletado"] = True
+                            self.mostrar_mensagem("Item coletado!", 120)
+                            
+                            # Troca o spritesheet do jogador com base no coletável
+                            if index == 0:  # Coletável [0]
+                                atualizar_sprites(self.player, player_spritesheet2)
+                            elif index == 1:  # Coletável [1]
+                                atualizar_sprites(self.player, player_spritesheet3)
 
             # Desenha coletáveis não coletados
             for coletavel in self.coletaveis[self.mapa_atual]:
@@ -228,7 +263,7 @@ colisoes_torre_final = [
     pygame.Rect(0, 650, 220, 100),  # Paredes rochosas inferiores
     pygame.Rect(250, 700, 130, 100),  # Paredes rochosas inferiores 2
     pygame.Rect(440, 770, 410, 100),  # Paredes rochosas inferiores 3
-    pygame.Rect(290, 235, 8, 5),  # Esqueleto
+    pygame.Rect(240, 215, 8, 5),  # Esqueleto
     pygame.Rect(770, 450, 10, 20),  # Baú
 
 ]
