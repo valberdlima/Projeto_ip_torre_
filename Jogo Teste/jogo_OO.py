@@ -105,10 +105,6 @@ class Game:
         self.mapa_atual = "primeiro mapa"
         self.player = Player(Largura // 2, Altura // 2)
 
-        # Carrega o coletável
-        self.coletavel_img = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
-        self.coletavel_img.set_colorkey((0, 0, 0))
-
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
         self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau aberto 2.png"), (46, 36))
 
