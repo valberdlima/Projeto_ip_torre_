@@ -1,4 +1,7 @@
 # importa a biblioteca pygame
+import os
+os.environ["SDL_AUDIODRIVER"] = "dummy"
+
 import pygame 
 
 # configuracoes basicas do jogo
@@ -106,7 +109,7 @@ class Game:
         self.player = Player(Largura // 2, Altura // 2)
 
         # Carrega o coletável
-        self.coletavel_img = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
+        self.coletavel_img = pygame.transform.scale(pygame.image.load("bau aberto 2.png"), (64, 64))
         self.coletavel_img.set_colorkey((0, 0, 0))
 
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
