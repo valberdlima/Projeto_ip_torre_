@@ -95,6 +95,9 @@ class Game:
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
         self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau aberto 2.png"), (46, 36))
 
+        self.coletavel_img4 = pygame.transform.scale(pygame.image.load("Caveira_Com_Manto.png"), (100, 100))
+        self.coletavel_img5 = pygame.transform.scale(pygame.image.load("Caveira_Sem_Manto.png"), (100, 100))
+
         # Coletáveis por mapa
         self.coletaveis = {
             "primeiro mapa": [
@@ -104,7 +107,7 @@ class Game:
             ],
             "segundo mapa": [
                 # {"pos": (600, 400), "coletado": False},
-                # {"pos": (800, 600), "coletado": False},
+                {"pos": (250, 200), "coletado": False},
                 {"pos": (750, 470), "coletado": False}
             ]
         }
@@ -177,10 +180,16 @@ class Game:
 
             # Desenha coletáveis não coletados
             for coletavel in self.coletaveis[self.mapa_atual]:
-                if not coletavel["coletado"]:
-                    self.tela.blit(self.coletavel_img2, coletavel["pos"])
-                if coletavel["coletado"]:
-                    self.tela.blit(self.coletavel_img3, coletavel["pos"])
+                if coletavel == self.coletaveis[self.mapa_atual][1]:
+                    if not coletavel["coletado"]:
+                        self.tela.blit(self.coletavel_img2, coletavel["pos"])
+                    if coletavel["coletado"]:
+                        self.tela.blit(self.coletavel_img3, coletavel["pos"])
+                else:
+                    if not coletavel["coletado"]:
+                        self.tela.blit(self.coletavel_img4, coletavel["pos"])
+                    if coletavel["coletado"]:
+                        self.tela.blit(self.coletavel_img5, coletavel["pos"])
 
             # Transição dos mapas
             #transição para o segundo mapa
@@ -219,6 +228,9 @@ colisoes_torre_final = [
     pygame.Rect(0, 650, 220, 100),  # Paredes rochosas inferiores
     pygame.Rect(250, 700, 130, 100),  # Paredes rochosas inferiores 2
     pygame.Rect(440, 770, 410, 100),  # Paredes rochosas inferiores 3
+    pygame.Rect(290, 235, 8, 5),  # Esqueleto
+    pygame.Rect(770, 450, 10, 20),  # Baú
+
 ]
 
 # Iniciar o jogo
