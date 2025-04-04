@@ -2,7 +2,7 @@
 import pygame 
 
 # configuracoes basicas do jogo
-Largura, Altura = 1440, 960
+Largura, Altura = 1000, 800
 player_velocidade = 5
 FPS = 60
 
@@ -15,7 +15,7 @@ mapas = {
     "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
     "segundo mapa": pygame.transform.scale(pygame.image.load("mapa torre final.png"), (Largura, Altura))
 }
-player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (1664, 6912))
+player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
 
 def get_sprites(sheet, linhas, colunas, largura, altura):
     sprites = []
@@ -27,7 +27,7 @@ def get_sprites(sheet, linhas, colunas, largura, altura):
             sprites.append(sprite)
     return sprites  
 
-SPRITE_Largura, SPRITE_Altura = 128, 128 
+SPRITE_Largura, SPRITE_Altura = 64, 64 
 sprites = get_sprites(player_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)  
 
 ANIM_Baixo = sprites[130:139]  
@@ -44,28 +44,35 @@ class Player:
         self.y = y
         self.frame = 0
         self.direcao = ANIM_Baixo
-        
-    def move(self, keys):
+
+    def move(self, keys, colisoes):
         movendo = False
+        novo_x, novo_y = self.x, self.y
+
         if keys[pygame.K_LEFT]:
-            self.x -= player_velocidade
+            novo_x -= player_velocidade
             self.direcao = ANIM_Esquerda
             movendo = True
         if keys[pygame.K_RIGHT]:
-            self.x += player_velocidade
+            novo_x += player_velocidade
             self.direcao = ANIM_Direita
             movendo = True
         if keys[pygame.K_UP]:
-            self.y -= player_velocidade
+            novo_y -= player_velocidade
             self.direcao = ANIM_Cima
             movendo = True
         if keys[pygame.K_DOWN]:
-            self.y += player_velocidade
+            novo_y += player_velocidade
             self.direcao = ANIM_Baixo
             movendo = True
+
+        # Verifica colisões
+        jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
+        if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
+            self.x, self.y = novo_x, novo_y  # Atualiza posição se não houver colisão
+
         if movendo:
             self.frame = (self.frame + 1) % len(self.direcao)
-        
         else:
             self.frame = 0
 
@@ -85,16 +92,20 @@ class Game:
         self.coletavel_img = pygame.transform.scale(pygame.image.load("hamburger 2.0.png"), (64, 64))
         self.coletavel_img.set_colorkey((0, 0, 0))
 
+        self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
+        self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau aberto 2.png"), (46, 36))
+
         # Coletáveis por mapa
         self.coletaveis = {
             "primeiro mapa": [
-                {"pos": (800, 800), "coletado": False},
-                {"pos": (200, 300), "coletado": False},
-                {"pos": (1200, 500), "coletado": False}
+            #     {"pos": (800, 600), "coletado": False},
+            #     {"pos": (200, 300), "coletado": False},
+            #     {"pos": (800, 500), "coletado": False}
             ],
             "segundo mapa": [
-                {"pos": (600, 400), "coletado": False},
-                {"pos": (1000, 700), "coletado": False}
+                # {"pos": (600, 400), "coletado": False},
+                # {"pos": (800, 600), "coletado": False},
+                {"pos": (750, 470), "coletado": False}
             ]
         }
 
@@ -141,7 +152,14 @@ class Game:
             self.clock.tick(FPS)
             self.tela.blit(mapas[self.mapa_atual], (0, 0))
             keys = pygame.key.get_pressed()
-            self.player.move(keys)
+
+            # Define as colisões do mapa atual
+            if self.mapa_atual == "segundo mapa":
+                colisoes = colisoes_torre_final
+            else:
+                colisoes = []  # Sem colisões no primeiro mapa
+
+            self.player.move(keys, colisoes)
             self.player.draw(self.tela)
 
             for event in pygame.event.get():
@@ -152,7 +170,7 @@ class Game:
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
             for coletavel in self.coletaveis[self.mapa_atual]:
                 if not coletavel["coletado"]:
-                    coletavel_rect = self.coletavel_img.get_rect(topleft=coletavel["pos"])
+                    coletavel_rect = self.coletavel_img2.get_rect(topleft=coletavel["pos"])
                     if jogador_rect.colliderect(coletavel_rect):
                         coletavel["coletado"] = True
                         self.mostrar_mensagem("Item coletado!", 120)
@@ -160,15 +178,26 @@ class Game:
             # Desenha coletáveis não coletados
             for coletavel in self.coletaveis[self.mapa_atual]:
                 if not coletavel["coletado"]:
-                    self.tela.blit(self.coletavel_img, coletavel["pos"])
+                    self.tela.blit(self.coletavel_img2, coletavel["pos"])
+                if coletavel["coletado"]:
+                    self.tela.blit(self.coletavel_img3, coletavel["pos"])
 
             # Transição dos mapas
+            #transição para o segundo mapa
             if self.mapa_atual == "primeiro mapa" and self.player.y <= 0:
                 self.mapa_atual = "segundo mapa"
-                self.player.y = Altura - SPRITE_Altura - 20
-            if self.mapa_atual == "segundo mapa" and self.player.y >= (Altura - SPRITE_Altura):
-                self.mapa_atual = "primeiro mapa"
-                self.player.y = 20
+                self.player.y = Altura // 2 + 20
+                self.player.x = 15 
+            if self.mapa_atual == "segundo mapa":
+                #voltar para o primeiro mapa
+                if self.player.x <= 5:
+                    self.mapa_atual = "primeiro mapa"
+                    self.player.y = 20
+                #transicão para dentro da torre    
+                elif 420 < self.player.x < 460 and self.player.y <= 225:
+                    self.mapa_atual = "primeiro mapa"
+                    self.player.x = 800
+                    self.player.y = 600
 
             # Desenha a mensagem se houver
             self.desenhar_mensagem()
@@ -176,6 +205,21 @@ class Game:
             pygame.display.update()
 
         pygame.quit()
+
+# Áreas de colisão para o mapa "torre final"
+colisoes_torre_final = [
+    pygame.Rect(0, 0, 40, 165),  # Paredes rochosas superiores
+    pygame.Rect(100, 0, 300, 60),  # Paredes rochosas superiores 2
+    pygame.Rect(590, 0, 300, 20),  # Paredes rochosas superiores 3
+    pygame.Rect(390, 20, 140, 200),  # Torre de pedra
+    pygame.Rect(750, 0, 280, 400),  # Água superior
+    pygame.Rect(855, 450, 280, 50), # Pier
+    pygame.Rect(750, 525, 280, 40), # Água inferior
+    pygame.Rect(800, 570, 280, 250), # Água inferior 2
+    pygame.Rect(0, 650, 220, 100),  # Paredes rochosas inferiores
+    pygame.Rect(250, 700, 130, 100),  # Paredes rochosas inferiores 2
+    pygame.Rect(440, 770, 410, 100),  # Paredes rochosas inferiores 3
+]
 
 # Iniciar o jogo
 game = Game()
