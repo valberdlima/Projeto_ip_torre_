@@ -13,8 +13,9 @@ clock = pygame.time.Clock()
 
 # carrega as imagens
 mapas = {
-    "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
-    "segundo mapa": pygame.transform.scale(pygame.image.load("Mapa torre final.png"), (Largura, Altura))
+    "primeiro mapa": pygame.transform.scale(pygame.image.load("Mapa revolution 3000.png"), (Largura, Altura)),
+    "segundo mapa": pygame.transform.scale(pygame.image.load("Mapa torre final.png"), (Largura, Altura)),
+    "torre": pygame.transform.scale(pygame.image.load("Mapa da torre exposta final.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
 player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
@@ -104,7 +105,7 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
         self.mapa_atual = "primeiro mapa"
-        self.player = Player(Largura // 2, Altura // 2)
+        self.player = Player(30, Altura // 2)
 
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
         self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau aberto 2.png"), (46, 36))
@@ -123,6 +124,9 @@ class Game:
                 # {"pos": (600, 400), "coletado": False},
                 {"pos": (200, 180), "coletado": False},
                 {"pos": (750, 470), "coletado": False}
+            ],
+            "torre": [
+
             ]
         }
 
@@ -225,20 +229,21 @@ class Game:
 
             # Transição dos mapas
             #transição para o segundo mapa
-            if self.mapa_atual == "primeiro mapa" and self.player.y <= 0:
+            if self.mapa_atual == "primeiro mapa" and self.player.x >=970:
                 self.mapa_atual = "segundo mapa"
-                self.player.y = Altura // 2 + 20
+                self.player.y = Altura // 2 + 35
                 self.player.x = 15 
             if self.mapa_atual == "segundo mapa":
                 #voltar para o primeiro mapa
                 if self.player.x <= 5:
                     self.mapa_atual = "primeiro mapa"
-                    self.player.y = 20
+                    self.player.y = Altura // 2 - 20
+                    self.player.x = 950
                 #transicão para dentro da torre    
                 elif 420 < self.player.x < 460 and self.player.y <= 225:
-                    self.mapa_atual = "primeiro mapa"
-                    self.player.x = 800
-                    self.player.y = 600
+                    self.mapa_atual = "torre"
+                    self.player.x = Largura // 2 - 30
+                    self.player.y = 780
 
             # Desenha a mensagem se houver
             self.desenhar_mensagem()
