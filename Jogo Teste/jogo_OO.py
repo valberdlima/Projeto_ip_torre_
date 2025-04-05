@@ -42,7 +42,7 @@ ANIM_Direita = sprites[143:152]  # animacao para direita
 ANIM_Cima = sprites[104:113]  # animacao para cima
 
 # Configuração de font para mensagens
-font_alagard = pygame.font.Font('alagard.ttf', 40)
+font_alagard = pygame.font.Font('alagard.ttf', 40)
 
 # Função para atualizar os sprites do jogador
 def atualizar_sprites(player, novo_spritesheet):
