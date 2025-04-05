@@ -41,8 +41,8 @@ ANIM_Esquerda = sprites[117:126]  # animacao para esquerda
 ANIM_Direita = sprites[143:152]  # animacao para direita
 ANIM_Cima = sprites[104:113]  # animacao para cima
 
-# Configuração de fonte para mensagens
-fonte = pygame.font.SysFont("arial", 40)
+# Configuração de font para mensagens
+font_alagard = pygame.font.Font('alagard.ttf', 40)
 
 # Função para atualizar os sprites do jogador
 def atualizar_sprites(player, novo_spritesheet):
@@ -153,7 +153,7 @@ class Game:
             # Desenha o retângulo de fundo
             pygame.draw.rect(self.tela, (50, 50, 50), (caixa_x, caixa_y, caixa_largura, caixa_altura))
             # Renderiza o texto e centraliza dentro da caixa
-            texto_surface = fonte.render(self.mensagem_texto, True, (255, 255, 255))
+            texto_surface = font_alagard.render(self.mensagem_texto, True, (255, 255, 255))
             texto_rect = texto_surface.get_rect(center=(caixa_x + caixa_largura // 2, caixa_y + caixa_altura // 2))
             self.tela.blit(texto_surface, texto_rect)
             self.mensagem_tempo -= 1
@@ -167,7 +167,7 @@ class Game:
                     pygame.quit()
                     return False
             self.tela.fill((0, 0, 0)) # tela preta
-            texto_surface = fonte.render("Bem-vindo a A Ordem dos Discretos!", True, (255, 255, 255))
+            texto_surface = font_alagard.render("Bem-vindo a A Ordem dos Discretos!", True, (255, 255, 255))
             texto_rect = texto_surface.get_rect(center=(Largura // 2, Altura // 2))
             self.tela.blit(texto_surface, texto_rect)
             pygame.display.update() # atualiza a tela
