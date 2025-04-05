@@ -1,107 +1,8 @@
-# importa a biblioteca pygame
-import os
-import pygame 
+import pygame
+from config import tela, clock, FPS, Largura, Altura, fonte, colisoes_torre_final, SPRITE_Altura, SPRITE_Largura
+from assets import mapas, player_spritesheet2, player_spritesheet3, atualizar_sprites
+from player import Player
 
-# configuracoes basicas do jogo
-Largura, Altura = 1000, 800 # tamanho da tela
-player_velocidade = 4 
-FPS = 60
-
-pygame.init()
-tela = pygame.display.set_mode((Largura, Altura)) 
-clock = pygame.time.Clock()
-
-# carrega as imagens
-mapas = {
-    "primeiro mapa": pygame.transform.scale(pygame.image.load("Mapa revolution 3000.png"), (Largura, Altura)),
-    "segundo mapa": pygame.transform.scale(pygame.image.load("Mapa torre final.png"), (Largura, Altura)),
-    "torre": pygame.transform.scale(pygame.image.load("Mapa da torre exposta final.png"), (Largura, Altura))
-}
-player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456)) 
-player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
-player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (1536, 4224))
-
-# funcao para carregar os sprites do spritesheet
-def get_sprites(sheet, linhas, colunas, largura, altura):
-    sprites = []
-    for linha in range(linhas): # itera pelas linhas do spritesheet
-        for coluna in range(colunas):  # itera pelas colunas do spritesheet
-            x = coluna * largura # define largura e altura do sprite
-            y = linha * altura
-            sprite = sheet.subsurface(pygame.Rect(x, y, largura, altura)) 
-            sprites.append(sprite)
-    return sprites  
-
-# carrega os sprites do jogador
-SPRITE_Largura, SPRITE_Altura = 64, 64 
-sprites = get_sprites(player_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)  
-
-ANIM_Baixo = sprites[130:139]  # animacao para baixo
-ANIM_Esquerda = sprites[117:126]  # animacao para esquerda
-ANIM_Direita = sprites[143:152]  # animacao para direita
-ANIM_Cima = sprites[104:113]  # animacao para cima
-
-# Configuração de fonte para mensagens
-fonte = pygame.font.SysFont("arial", 40)
-
-# Função para atualizar os sprites do jogador
-def atualizar_sprites(player, novo_spritesheet):
-    global ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima 
-    sprites = get_sprites(novo_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)
-    ANIM_Baixo = sprites[130:139]
-    ANIM_Esquerda = sprites[117:126]
-    ANIM_Direita = sprites[143:152]
-    ANIM_Cima = sprites[104:113]
-    player.direcao = ANIM_Baixo  # Atualiza a direção atual do jogador
-
-class Player:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.frame = 0
-        self.direcao = ANIM_Baixo
-        self.animacao_contador = 0  # Contador para controlar a animação
-
-    def move(self, keys, colisoes):
-        movendo = False
-        novo_x, novo_y = self.x, self.y
-        
-        # verifica as teclas pressionadas e atualiza a posicao do jogador
-        if keys[pygame.K_LEFT]:
-            novo_x -= player_velocidade
-            self.direcao = ANIM_Esquerda
-            movendo = True
-        if keys[pygame.K_RIGHT]:
-            novo_x += player_velocidade
-            self.direcao = ANIM_Direita
-            movendo = True
-        if keys[pygame.K_UP]:
-            novo_y -= player_velocidade
-            self.direcao = ANIM_Cima
-            movendo = True
-        if keys[pygame.K_DOWN]:
-            novo_y += player_velocidade
-            self.direcao = ANIM_Baixo
-            movendo = True
-
-        # Verifica colisões
-        jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
-        if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
-            self.x, self.y = novo_x, novo_y  # Atualiza posição se não houver colisão
-
-        # Controla a taxa de atualização da animação
-        if movendo:
-            self.animacao_contador += 1
-            if self.animacao_contador % 5 == 0:  # Atualiza o frame a cada 5 ciclos
-                self.frame = (self.frame + 1) % len(self.direcao)
-        else:
-            self.frame = 0
-            self.animacao_contador = 0  # Reseta o contador quando parado
-
-    def draw(self, screen):
-        screen.blit(self.direcao[self.frame], (self.x, self.y))
-
-# class para o jogo
 class Game: 
     def __init__(self): # inicializa o jogo
         self.tela = pygame.display.set_mode((Largura, Altura)) # tela de entrada
@@ -109,7 +10,7 @@ class Game:
         self.clock = pygame.time.Clock() 
         self.running = True 
         self.mapa_atual = "primeiro mapa"
-        self.player = Player(30, Altura // 2)
+        self.player = Player(Largura // 2, Altura // 2)
 
         # carrega os sprites dos coletaveis
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
@@ -129,9 +30,6 @@ class Game:
                 # {"pos": (600, 400), "coletado": False},
                 {"pos": (200, 180), "coletado": False},
                 {"pos": (750, 470), "coletado": False}
-            ],
-            "torre": [
-
             ]
         }
 
@@ -237,21 +135,20 @@ class Game:
 
             # Transição dos mapas
             #transição para o segundo mapa
-            if self.mapa_atual == "primeiro mapa" and self.player.x >=970:
+            if self.mapa_atual == "primeiro mapa" and self.player.y <= 0:
                 self.mapa_atual = "segundo mapa"
-                self.player.y = Altura // 2 + 35
+                self.player.y = Altura // 2 + 20
                 self.player.x = 15 
             if self.mapa_atual == "segundo mapa":
                 #voltar para o primeiro mapa
                 if self.player.x <= 5:
                     self.mapa_atual = "primeiro mapa"
-                    self.player.y = Altura // 2 - 20
-                    self.player.x = 950
+                    self.player.y = 20
                 #transicão para dentro da torre    
                 elif 420 < self.player.x < 460 and self.player.y <= 225:
-                    self.mapa_atual = "torre"
-                    self.player.x = Largura // 2 - 30
-                    self.player.y = 780
+                    self.mapa_atual = "primeiro mapa"
+                    self.player.x = 800
+                    self.player.y = 600
 
             # Desenha a mensagem se houver
             self.desenhar_mensagem()
@@ -259,25 +156,3 @@ class Game:
             pygame.display.update()
 
         pygame.quit()
-
-# Áreas de colisão para o mapa "torre final"
-colisoes_torre_final = [
-    pygame.Rect(0, 0, 40, 165),  # Paredes rochosas superiores
-    pygame.Rect(100, 0, 300, 60),  # Paredes rochosas superiores 2
-    pygame.Rect(590, 0, 300, 20),  # Paredes rochosas superiores 3
-    pygame.Rect(390, 20, 140, 200),  # Torre de pedra
-    pygame.Rect(750, 0, 280, 400),  # Água superior
-    pygame.Rect(855, 450, 280, 50), # Pier
-    pygame.Rect(750, 525, 280, 40), # Água inferior
-    pygame.Rect(800, 570, 280, 250), # Água inferior 2
-    pygame.Rect(0, 650, 220, 100),  # Paredes rochosas inferiores
-    pygame.Rect(250, 700, 130, 100),  # Paredes rochosas inferiores 2
-    pygame.Rect(440, 770, 410, 100),  # Paredes rochosas inferiores 3
-    pygame.Rect(240, 215, 8, 5),  # Esqueleto
-    pygame.Rect(770, 450, 10, 20),  # Baú
-
-]
-
-# Iniciar o jogo
-game = Game()
-game.game_loop()
