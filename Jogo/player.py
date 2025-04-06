@@ -1,6 +1,16 @@
-from assets import ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima
-from config import player_velocidade, SPRITE_Largura, SPRITE_Altura
 import pygame
+from config import SPRITE_Largura, SPRITE_Altura, player_velocidade
+from assets import get_sprites, ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima
+
+# Função para atualizar sprites
+def atualizar_sprites(player, novo_spritesheet):
+    global ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima
+    sprites = get_sprites(novo_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)
+    ANIM_Baixo = sprites[130:139]
+    ANIM_Esquerda = sprites[117:126]
+    ANIM_Direita = sprites[143:152]
+    ANIM_Cima = sprites[104:113]
+    player.direcao = ANIM_Baixo # Atualiza a direção atual do jogador
 
 class Player:
     def __init__(self, x, y):
@@ -35,12 +45,12 @@ class Player:
         # Verifica colisões
         jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
         if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
-            self.x, self.y = novo_x, novo_y  # Atualiza posição se não houver colisão
+            self.x, self.y = novo_x, novo_y # Atualiza posição se não houver colisão
 
         # Controla a taxa de atualização da animação
         if movendo:
             self.animacao_contador += 1
-            if self.animacao_contador % 5 == 0:  # Atualiza o frame a cada 5 ciclos
+            if self.animacao_contador % 5 == 0: # Atualiza o frame a cada 5 ciclos
                 self.frame = (self.frame + 1) % len(self.direcao)
         else:
             self.frame = 0

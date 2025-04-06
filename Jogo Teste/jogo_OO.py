@@ -13,9 +13,9 @@ clock = pygame.time.Clock()
 
 # carrega as imagens
 mapas = {
-    "primeiro mapa": pygame.transform.scale(pygame.image.load("Mapa revolution 3000.png"), (Largura, Altura)),
-    "segundo mapa": pygame.transform.scale(pygame.image.load("Mapa torre final.png"), (Largura, Altura)),
-    "torre": pygame.transform.scale(pygame.image.load("Mapa da torre exposta final.png"), (Largura, Altura))
+    "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
+    "segundo mapa": pygame.transform.scale(pygame.image.load("mapa_2.png"), (Largura, Altura)),
+    "torre": pygame.transform.scale(pygame.image.load("mapa_torre.png"), (Largura, Altura))
 }
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456)) 
 player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
@@ -112,8 +112,8 @@ class Game:
         self.player = Player(30, Altura // 2)
 
         # carrega os sprites dos coletaveis
-        self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau fechado 2.png"), (46, 36))
-        self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau aberto 2.png"), (46, 36))
+        self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau_fechado.png"), (46, 36))
+        self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau_aberto.png"), (46, 36))
 
         self.coletavel_img4 = pygame.transform.scale(pygame.image.load("Caveira_Com_Manto.png"), (100, 100))
         self.coletavel_img5 = pygame.transform.scale(pygame.image.load("Caveira_Sem_Manto.png"), (100, 100))
@@ -184,11 +184,11 @@ class Game:
 
             # Define as colisões do mapa atual
             if self.mapa_atual == "segundo mapa":
-                colisoes = colisoes_torre_final
+                colisoes = colisoes_segundo_mapa
             if self.mapa_atual == "torre":
-                colisoes = colisoes_torre_interior
+                colisoes = colisoes_mapa_torre
             if self.mapa_atual == "primeiro mapa":
-                colisoes = colisoes_mapa_inicial
+                colisoes = colisoes_primeiro_mapa
 
             self.player.move(keys, colisoes)
             self.player.draw(self.tela)
@@ -263,7 +263,7 @@ class Game:
         pygame.quit()
 
 #colisões prontas
-colisoes_torre_final = [
+colisoes_segundo_mapa = [
     pygame.Rect(0, 0, 40, 165),  # Paredes rochosas superiores
     pygame.Rect(100, 0, 300, 60),  # Paredes rochosas superiores 2
     pygame.Rect(590, 0, 300, 20),  # Paredes rochosas superiores 3
@@ -281,7 +281,7 @@ colisoes_torre_final = [
 ]
 
 #colisões prontas
-colisoes_torre_interior = [
+colisoes_mapa_torre = [
     pygame.Rect(0, 0, 1000, 200),  # Parede fundo
     pygame.Rect(0, 210, 60, 30),  # Parede fundo esquerda
     pygame.Rect(945, 210, 60, 30),  # Parede fundo direita
@@ -303,7 +303,7 @@ colisoes_torre_interior = [
 ]
 
 #colisoes prontas
-colisoes_mapa_inicial = [
+colisoes_primeiro_mapa = [
     pygame.Rect(0, 0, 1, 800),  # Parede lateral esquerda
     pygame.Rect(0, 0, 1000, 1),  # Parede superior
     pygame.Rect(0, 799, 1000, 1),  # Parede inferior
