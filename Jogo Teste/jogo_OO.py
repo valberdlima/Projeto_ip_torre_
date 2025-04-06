@@ -302,8 +302,24 @@ colisoes_torre_interior = [
     
 ]
 
+#colisoes prontas
 colisoes_mapa_inicial = [
     pygame.Rect(0, 0, 1, 800),  # Parede lateral esquerda
+    pygame.Rect(0, 0, 1000, 1),  # Parede superior
+    pygame.Rect(0, 799, 1000, 1),  # Parede inferior
+    pygame.Rect(950, 0, 100, 250),  # Parede lateral direita superior
+    pygame.Rect(800, 550, 200, 200),  # Parede lateral direita inferior
+    pygame.Rect(0, 0, 200, 340),  # Bloco arvores e pedras esquerda
+    pygame.Rect(0, 600, 50, 200),  # Arvore inferior
+    pygame.Rect(80, 550, 50, 250),  # Arvore inferior
+    pygame.Rect(260, 650, 240, 150),  # Lago
+    pygame.Rect(650, 680, 350, 100),  # Floresta inferior direita
+    pygame.Rect(860, 30, 50, 100),  # Arvore superior direita
+    pygame.Rect(700, 80, 50, 100),  # Estatua
+    pygame.Rect(390, 10, 160, 130),  # Arvore cercada
+    pygame.Rect(410, 230, 70, 40),  # Fonte
+    pygame.Rect(575, 245, 60, 105),  # Arvore central
+    pygame.Rect(200, 40, 70, 30),  # Pedra superior esquerda
 
 ]
 
