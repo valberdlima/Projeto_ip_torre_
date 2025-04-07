@@ -251,22 +251,27 @@ class Game:
                         self.tela.blit(self.coletavel_img5, coletavel["pos"])
 
             # Transição dos mapas
-            #transição para o segundo mapa
-            if self.mapa_atual == "primeiro mapa" and self.player.x >=970:
+            if self.mapa_atual == "primeiro mapa" and self.player.x >= 970:
                 self.mapa_atual = "segundo mapa"
                 self.player.y = Altura // 2 + 35
                 self.player.x = 15 
             if self.mapa_atual == "segundo mapa":
-                #voltar para o primeiro mapa
+                # Voltar para o primeiro mapa
                 if self.player.x <= 5:
                     self.mapa_atual = "primeiro mapa"
                     self.player.y = Altura // 2 - 20
                     self.player.x = 950
-                #transicão para dentro da torre    
+                # Transição para dentro da torre    
                 elif 420 < self.player.x < 460 and self.player.y <= 225:
                     self.mapa_atual = "torre"
                     self.player.x = Largura // 2 - 30
-                    self.player.y = 780
+                    self.player.y = 760  # Entrada em y = 760
+            if self.mapa_atual == "torre":
+                # Voltar para o segundo mapa ao descer pela porta
+                if 415 < self.player.x < 600 and self.player.y >= 780:  # Ajustado para y >= 780 e x alinhado com a abertura
+                    self.mapa_atual = "segundo mapa"
+                    self.player.x = 440  # Centraliza na entrada da torre no segundo mapa
+                    self.player.y = 225  # Posiciona logo abaixo da entrada da torre
 
             # Desenha a mensagem se houver
             self.desenhar_mensagem()
