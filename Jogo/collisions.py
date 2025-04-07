@@ -27,7 +27,7 @@ colisoes_mapa_torre = [
     pygame.Rect(970, 750, 20, 50),  # Parede lateral direita
     pygame.Rect(30, 795, 385, 3),  # Parede inferior esquerda
     pygame.Rect(600, 795, 400, 3),  # Parede inferior direita
-    pygame.Rect(0, 850, 1000, 1),  # Barreira porta
+    #pygame.Rect(0, 850, 1000, 1),  # Barreira porta
     pygame.Rect(140, 220, 30, 80),  # Estatua superior esquerda
     pygame.Rect(800, 220, 30, 80),  # Estatua superior direita
     pygame.Rect(20, 420, 60, 50),  # Estatua meio esquerda
