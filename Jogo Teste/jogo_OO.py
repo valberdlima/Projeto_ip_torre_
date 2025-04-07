@@ -147,15 +147,27 @@ class Game:
     # desenha a mensagem na tela
     def desenhar_mensagem(self):
         if self.mensagem_tempo > 0:
-            # Define a posição e tamanho da caixa de mensagem
-            caixa_largura, caixa_altura = Largura // 2, Altura // 6
-            caixa_x, caixa_y = Largura // 4, Altura // 3
-            # Desenha o retângulo de fundo
-            pygame.draw.rect(self.tela, (50, 50, 50), (caixa_x, caixa_y, caixa_largura, caixa_altura))
-            # Renderiza o texto e centraliza dentro da caixa
-            texto_surface = font_alagard.render(self.mensagem_texto, True, (255, 255, 255))
+            # Aumenta o tamanho da caixa para caber mensagens mais longas
+            caixa_largura, caixa_altura = Largura // 1.5, Altura // 5  # Aumentei a largura
+            caixa_x, caixa_y = (Largura - caixa_largura) // 2, Altura // 3  # Centraliza horizontalmente
+            
+            # Desenha uma caixa com borda arredondada e sombra
+            # Sombra (mais escura)
+            pygame.draw.rect(self.tela, (20, 20, 20), (caixa_x + 5, caixa_y + 5, caixa_largura, caixa_altura), border_radius=15)
+            # Caixa principal com gradiente mais escuro
+            surface_caixa = pygame.Surface((caixa_largura, caixa_altura), pygame.SRCALPHA)
+            pygame.draw.rect(surface_caixa, (60, 60, 60, 230), (0, 0, caixa_largura, caixa_altura), border_radius=15)  # Fundo mais escuro
+            # Borda dourada
+            pygame.draw.rect(surface_caixa, (200, 180, 100), (0, 0, caixa_largura, caixa_altura), 3, border_radius=15)
+            self.tela.blit(surface_caixa, (caixa_x, caixa_y))
+            
+            # Renderiza o texto com sombra
+            texto_surface_sombra = font_alagard.render(self.mensagem_texto, True, (40, 40, 40))  # Sombra mais escura
+            texto_surface = font_alagard.render(self.mensagem_texto, True, (255, 215, 0))  # Texto dourado
             texto_rect = texto_surface.get_rect(center=(caixa_x + caixa_largura // 2, caixa_y + caixa_altura // 2))
+            self.tela.blit(texto_surface_sombra, (texto_rect.x + 2, texto_rect.y + 2))
             self.tela.blit(texto_surface, texto_rect)
+            
             self.mensagem_tempo -= 1
 
     # def para a tela inicial
@@ -198,6 +210,7 @@ class Game:
                     self.running = False
 
             # Verifica colisão com coletáveis
+            # Verifica colisão com coletáveis
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
                 if not coletavel["coletado"]:
@@ -206,7 +219,7 @@ class Game:
                     if coletavel == self.coletaveis[self.mapa_atual][1]:
                         if jogador_rect.colliderect(coletavel_rect_bau) and self.coletaveis["segundo mapa"][0]["coletado"]:
                             coletavel["coletado"] = True
-                            self.mostrar_mensagem("Item coletado!", 120)
+                            self.mostrar_mensagem("Cajado da Vacuidade coletado", 120)  # Mensagem para o cajado
                             
                             # Troca o spritesheet do jogador com base no coletável
                             if index == 0:  # Coletável [0]
@@ -216,7 +229,7 @@ class Game:
                     else:
                         if jogador_rect.colliderect(coletavel_rect_esq):
                             coletavel["coletado"] = True
-                            self.mostrar_mensagem("Item coletado!", 120)
+                            self.mostrar_mensagem("Manto da Sabedoria coletado", 120)  # Mensagem para o manto
                             
                             # Troca o spritesheet do jogador com base no coletável
                             if index == 0:  # Coletável [0]
