@@ -12,10 +12,13 @@ player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"),
 player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
 player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (832, 3456))
 
+# barra de vida
+sprite_barra_vida = pygame.image.load("barra_vida.png").convert_alpha()
 
-##print(pygame.image.load("personagem.png").get_size())
+# sprite para um tamanho menor
+sprite_barra_vida = pygame.transform.scale(sprite_barra_vida, (200, 97))  
+
 # Boss Spritesheet
-
 BOSS_WIND_SPRITESHEET = pygame.image.load("boss_sprites.png").convert_alpha()
 print(BOSS_WIND_SPRITESHEET.get_width(), BOSS_WIND_SPRITESHEET.get_height())
 
