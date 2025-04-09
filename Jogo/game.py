@@ -1,10 +1,10 @@
 import pygame
 import pygame.mixer
 from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, font_mensagem, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
-from assets import mapas, player_spritesheet2, player_spritesheet3
+from assets import mapas, player_spritesheet2, player_spritesheet3, sprite_barra_vida
 from player import Player, atualizar_sprites
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
-from Boss import Boss, WindGust
+from boss import Boss, WindGust
 
 class Game:
     def __init__(self):
@@ -241,6 +241,7 @@ class Game:
             return
 
         while self.running:
+            
             self.clock.tick(FPS)
             self.tela.blit(mapas[self.mapa_atual], (0, 0))
             keys = pygame.key.get_pressed()
@@ -302,7 +303,9 @@ class Game:
             if not self.dialogo_ativa:
                 self.player.move(keys, colisoes)
 
+            # desenha o jogador e a barra de vida
             self.player.draw(self.tela)
+            self.player.draw_barra_vida(self.tela, sprite_barra_vida)
 
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
@@ -354,6 +357,11 @@ class Game:
                     self.mapa_atual = "torre"
                     self.player.x = Largura // 2 - 30
                     self.player.y = 780
+                    
+                    pygame.mixer.music.load("OST BOSS FIGHT.mp3")
+                    pygame.mixer.music.set_volume(0.05)
+                    pygame.mixer.music.play(-1)
+                    
                     # instancia o boss só uma vez
                     if self.boss is None:
                         self.boss = Boss(
@@ -379,6 +387,7 @@ class Game:
             self.desenhar_dialogo()
             self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()
+            
         pygame.mixer.music.stop()
         pygame.quit()
 
