@@ -41,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.barra_vida = 50  # tamanho da barra de vida
         self.relacao = self.max_vida / self.barra_vida # cada pixel da barra de vida representa 2 de vida
         
-    def move(self, keys, colisoes):
+    def move(self, keys, colisoes, objetos_coletados):
         movendo = False
         atacando = False
         novo_x, novo_y = self.x, self.y
