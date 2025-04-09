@@ -1,5 +1,5 @@
 import pygame
-from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, SPRITE_Largura, SPRITE_Altura, font_mensagem, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
+from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, font_mensagem, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
 from assets import mapas, player_spritesheet2, player_spritesheet3
 from player import Player, atualizar_sprites
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
@@ -38,7 +38,7 @@ class Game:
         self.dialogo_textos = [
             "Oxe… Que lugar é esse? Como vim parar aqui?",
             "….",
-            "Devo estar enlouquecendo… ou devo ter pego no sono\nestudando para a prova de matemática discreta"
+            "Devo estar enlouquecendo… ou pego no sono\nestudando para a prova de matemática discreta"
         ]
         self.dialogo_caveira = ["MEU DEUS!! Kenneth Rosen"]
         self.dialogo_atual_lista = self.dialogo_textos
@@ -48,6 +48,9 @@ class Game:
         self.dialogo_texto_atual = ""
         self.dialogo_caveira_ativa = False
         self.coleta_pendente = None
+
+        # Contador de objetos coletados
+        self.objetos_coletados = 0
 
     def quebrar_texto(self, texto, largura_max):
         """Divide o texto em linhas para caber na largura máxima."""
@@ -87,18 +90,15 @@ class Game:
         if not self.dialogo_ativa:
             return
 
-        # Calcula o tamanho da caixa e as linhas do texto
         largura, altura, linhas = self.calcular_tamanho_caixa(self.dialogo_atual_lista[self.dialogo_atual])
         caixa_x, caixa_y = DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y - (altura - DIALOGO_CAIXA_ALTURA_MIN)
 
-        # Desenha a caixa de diálogo estilo Stardew Valley, mas mais dark
         pygame.draw.rect(self.tela, (10, 10, 10), (caixa_x + 5, caixa_y + 5, largura, altura), border_radius=10)
         surface_caixa = pygame.Surface((largura, altura), pygame.SRCALPHA)
         pygame.draw.rect(surface_caixa, (30, 30, 30, 220), (0, 0, largura, altura), border_radius=10)
         pygame.draw.rect(surface_caixa, (100, 100, 100), (0, 0, largura, altura), 3, border_radius=10)
         self.tela.blit(surface_caixa, (caixa_x, caixa_y))
 
-        # Atualiza o texto letra por letra
         if self.dialogo_letra_contador < len(self.dialogo_atual_lista[self.dialogo_atual]):
             self.dialogo_frame_contador += 1
             if self.dialogo_frame_contador >= DIALOGO_VELOCIDADE:
@@ -106,14 +106,12 @@ class Game:
                 self.dialogo_texto_atual = self.dialogo_atual_lista[self.dialogo_atual][:self.dialogo_letra_contador]
                 self.dialogo_frame_contador = 0
 
-        # Divide o texto atual em linhas para exibição
         linhas_atuais = self.quebrar_texto(self.dialogo_texto_atual, DIALOGO_CAIXA_LARGURA_MAX - 2 * DIALOGO_MARGEM)
         for i, linha in enumerate(linhas_atuais):
             texto_surface = font_dialogo.render(linha, True, (200, 200, 200))
             texto_rect = texto_surface.get_rect(topleft=(caixa_x + DIALOGO_MARGEM, caixa_y + DIALOGO_MARGEM + i * font_dialogo.get_height()))
             self.tela.blit(texto_surface, texto_rect)
 
-        # Mostra instrução para avançar com fonte menor
         if self.dialogo_letra_contador >= len(self.dialogo_atual_lista[self.dialogo_atual]):
             instrucao_texto = "[ESPAÇO]"
             instrucao_surface = font_instrucao.render(instrucao_texto, True, (150, 150, 150))
@@ -126,19 +124,16 @@ class Game:
 
     def desenhar_mensagem(self):
         if self.mensagem_tempo > 0:
-            # Calcula o tamanho da caixa com base no texto
             largura = Largura // 1.5
             altura = Altura // 5
             caixa_x, caixa_y = (Largura - largura) // 2, Altura // 3
 
-            # Desenha a caixa com a estética original (cinza escura, borda dourada)
             pygame.draw.rect(self.tela, (20, 20, 20), (caixa_x + 5, caixa_y + 5, largura, altura), border_radius=15)
             surface_caixa = pygame.Surface((largura, altura), pygame.SRCALPHA)
             pygame.draw.rect(surface_caixa, (60, 60, 60, 230), (0, 0, largura, altura), border_radius=15)
             pygame.draw.rect(surface_caixa, (200, 180, 100), (0, 0, largura, altura), 3, border_radius=15)
             self.tela.blit(surface_caixa, (caixa_x, caixa_y))
 
-            # Renderiza o texto com sombra
             texto_surface_sombra = font_mensagem.render(self.mensagem_texto, True, (40, 40, 40))
             texto_surface = font_mensagem.render(self.mensagem_texto, True, (255, 215, 0))
             texto_rect = texto_surface.get_rect(center=(caixa_x + largura // 2, caixa_y + altura // 2))
@@ -147,14 +142,21 @@ class Game:
             
             self.mensagem_tempo -= 1
 
+    def desenhar_contador(self):
+        """Desenha o contador de objetos coletados no canto superior direito."""
+        texto = f"Objetos coletados: {self.objetos_coletados}"
+        texto_surface = font_mensagem.render(texto, True, (255, 255, 255))
+        texto_rect = texto_surface.get_rect(topright=(Largura - 10, 10))
+        self.tela.blit(texto_surface, texto_rect)
+
     def tela_inicial(self):
         inicio_tempo = pygame.time.get_ticks()
-        fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)  # Mesma estética de alagard.ttf
-        while pygame.time.get_ticks() - inicio_tempo < 3000:  # 3 segundos
+        fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)
+        while pygame.time.get_ticks() - inicio_tempo < 3000:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-            self.tela.fill((0, 0, 0))  # Fundo preto
+            self.tela.fill((0, 0, 0))
             texto_surface = fonte_tela_inicial.render("A Ordem dos Discretos", True, (255, 255, 255))
             texto_rect = texto_surface.get_rect(center=(Largura // 2, Altura // 2))
             self.tela.blit(texto_surface, texto_rect)
@@ -170,7 +172,6 @@ class Game:
             self.tela.blit(mapas[self.mapa_atual], (0, 0))
             keys = pygame.key.get_pressed()
 
-            # Define as colisões do mapa atual
             if self.mapa_atual == "segundo mapa":
                 colisoes = colisoes_segundo_mapa
             elif self.mapa_atual == "torre":
@@ -178,28 +179,25 @@ class Game:
             else:
                 colisoes = colisoes_primeiro_mapa
 
-            # Lida com eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
                 elif event.type == pygame.KEYDOWN and self.dialogo_ativa:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
                         if self.dialogo_letra_contador < len(self.dialogo_atual_lista[self.dialogo_atual]):
-                            # Completa o texto atual
                             self.dialogo_letra_contador = len(self.dialogo_atual_lista[self.dialogo_atual])
                             self.dialogo_texto_atual = self.dialogo_atual_lista[self.dialogo_atual]
                         else:
-                            # Avança para o próximo diálogo
                             self.dialogo_atual += 1
                             if self.dialogo_atual >= len(self.dialogo_atual_lista):
                                 self.dialogo_ativa = False
                                 if self.dialogo_caveira_ativa:
-                                    # Coleta o manto automaticamente
                                     if self.coleta_pendente is not None:
                                         coletavel = self.coletaveis["segundo mapa"][self.coleta_pendente]
                                         coletavel["coletado"] = True
                                         self.mostrar_mensagem("Manto da Sabedoria coletado!", 120)
                                         atualizar_sprites(self.player, player_spritesheet2)
+                                        self.objetos_coletados += 1  # Incrementa o contador
                                         self.coleta_pendente = None
                                     self.dialogo_caveira_ativa = False
                                     self.dialogo_atual_lista = self.dialogo_textos
@@ -208,20 +206,17 @@ class Game:
                                 self.dialogo_texto_atual = ""
                                 self.dialogo_frame_contador = 0
 
-            # Movimento do jogador só é permitido se não houver diálogo
             if not self.dialogo_ativa:
                 self.player.move(keys, colisoes)
 
             self.player.draw(self.tela)
 
-            # Verifica colisão com coletáveis
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
                 if not coletavel["coletado"]:
                     coletavel_rect_bau = self.coletavel_img2.get_rect(topleft=coletavel["pos"])
                     coletavel_rect_esq = self.coletavel_img4.get_rect(topleft=coletavel["pos"])
 
-                    # Diálogo da caveira
                     if index == 0 and self.mapa_atual == "segundo mapa" and not self.dialogo_caveira_ativa and not self.dialogo_ativa:
                         proximidade_rect = coletavel_rect_esq.inflate(100, 100)
                         if jogador_rect.colliderect(proximidade_rect):
@@ -234,14 +229,13 @@ class Game:
                             self.dialogo_frame_contador = 0
                             self.coleta_pendente = index
 
-                    # Coleta do cajado
                     if coletavel == self.coletaveis[self.mapa_atual][1]:
                         if jogador_rect.colliderect(coletavel_rect_bau) and self.coletaveis["segundo mapa"][0]["coletado"]:
                             coletavel["coletado"] = True
                             self.mostrar_mensagem("Cajado da Vacuidade coletado!", 120)
                             atualizar_sprites(self.player, player_spritesheet3)
+                            self.objetos_coletados += 1  # Incrementa o contador
 
-            # Desenha coletáveis não coletados
             for coletavel in self.coletaveis[self.mapa_atual]:
                 if coletavel == self.coletaveis[self.mapa_atual][1]:
                     if not coletavel["coletado"]:
@@ -254,7 +248,6 @@ class Game:
                     else:
                         self.tela.blit(self.coletavel_img5, coletavel["pos"])
 
-            # Transição dos mapas
             if self.mapa_atual == "primeiro mapa" and self.player.x >= 970:
                 self.mapa_atual = "segundo mapa"
                 self.player.y = Altura // 2 + 35
@@ -274,9 +267,9 @@ class Game:
                     self.player.x = 440
                     self.player.y = 225
 
-            # Desenha mensagem e diálogo
             self.desenhar_mensagem()
             self.desenhar_dialogo()
+            self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()
 
         pygame.quit()
