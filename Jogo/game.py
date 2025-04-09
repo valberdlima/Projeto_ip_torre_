@@ -4,6 +4,7 @@ from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instruc
 from assets import mapas, player_spritesheet2, player_spritesheet3
 from player import Player, atualizar_sprites
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
+from Boss import Boss, WindGust
 
 class Game:
     def __init__(self):
@@ -16,11 +17,15 @@ class Game:
 
         # Inicializar o mixer de som
         pygame.mixer.init()
-
         # Carregar e tocar a música em loop
         pygame.mixer.music.load("Hobbit OST 8 bits.mp3")  # Substitua pelo nome do arquivo MP3
         pygame.mixer.music.set_volume(0.05)  # Ajuste o volume (0.0 a 1.0)
         pygame.mixer.music.play(-1)  # -1 faz a música tocar em loop
+
+        ##boss_até entrar na torre
+        self.all_sprites   = pygame.sprite.Group()
+        self.boss_attacks  = pygame.sprite.Group()
+        self.boss          = None
 
         # Carrega os sprites dos coletáveis
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau_fechado.png"), (46, 36))
@@ -171,10 +176,11 @@ class Game:
 
             self.tela.blit(overlay, (0, 0))
             pygame.display.update()
-            self.clock.tick(FPS)
+            self.clock.tick(FPS)    
 
     def tela_inicial(self):
         """Exibe a tela inicial com um botão 'Play'."""
+        #fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)
         fonte_botao = pygame.font.Font('PressStart2P-Regular.ttf', 18)
 
         # Carregar imagem de fundo
@@ -193,7 +199,7 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-                if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:  # Clique esquerdo
                         mouse_x, mouse_y = pygame.mouse.get_pos()
                         if botao_x <= mouse_x <= botao_x + botao_largura and botao_y <= mouse_y <= botao_y + botao_altura:
@@ -227,7 +233,7 @@ class Game:
 
             # Desenhar o texto principal
             self.tela.blit(texto_surface, texto_botao_rect)
-
+            
             pygame.display.update()
 
     def game_loop(self):
@@ -238,6 +244,26 @@ class Game:
             self.clock.tick(FPS)
             self.tela.blit(mapas[self.mapa_atual], (0, 0))
             keys = pygame.key.get_pressed()
+
+            if self.mapa_atual == "torre" and self.boss:
+                # 1) atualiza animações do boss e projéteis
+                self.all_sprites.update()
+                
+                # 2) desenha boss e projéteis
+                self.all_sprites.draw(self.tela)
+                
+                # 3) desenha barra de vida
+                self.boss.draw_health_bar(self.tela)
+                
+                # 4) checa colisão projétil ↔ jogador
+                jogador_rect = pygame.Rect(
+                    self.player.x, self.player.y,
+                    SPRITE_Largura, SPRITE_Altura
+                )
+                for gust in self.boss_attacks:
+                    if gust.rect.colliderect(jogador_rect):
+                        self.mostrar_mensagem("HAHA! Você morrerá!", 60)
+                        gust.kill()
 
             if self.mapa_atual == "segundo mapa":
                 colisoes = colisoes_segundo_mapa
@@ -328,17 +354,31 @@ class Game:
                     self.mapa_atual = "torre"
                     self.player.x = Largura // 2 - 30
                     self.player.y = 780
+                    # instancia o boss só uma vez
+                    if self.boss is None:
+                        self.boss = Boss(
+                            x=Largura//2, y=230,
+                            all_sprites_group=self.all_sprites,
+                            attack_group=self.boss_attacks,
+                            game=self
+                        )
+                    self.all_sprites.add(self.boss)    
             elif self.mapa_atual == "torre":
                 if 415 < self.player.x < 600 and self.player.y >= 790:
                     self.mapa_atual = "segundo mapa"
                     self.player.x = 440
                     self.player.y = 225
 
+                    # destroi o boss e limpa os projéteis
+                    if self.boss:
+                        self.boss.kill()
+                        self.boss_attacks.empty()
+                        self.boss = None
+
             self.desenhar_mensagem()
             self.desenhar_dialogo()
             self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()
-        
         pygame.mixer.music.stop()
         pygame.quit()
 
