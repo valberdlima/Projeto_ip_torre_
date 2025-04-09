@@ -388,6 +388,7 @@ class Game:
             self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()
             
+            
         pygame.mixer.music.stop()
         pygame.quit()
 

@@ -44,8 +44,8 @@ class Player(pygame.sprite.Sprite):
     def move(self, keys, colisoes):
         movendo = False
         novo_x, novo_y = self.x, self.y
-        
-        # verifica as teclas pressionadas e atualiza a posicao do jogador
+
+        # Verifica as teclas pressionadas e atualiza a posição do jogador
         if keys[pygame.K_LEFT]:
             novo_x -= player_velocidade
             self.direcao = ANIM_Esquerda
@@ -66,19 +66,19 @@ class Player(pygame.sprite.Sprite):
         # Verifica colisões
         jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
         if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
-            self.x, self.y = novo_x, novo_y # Atualiza posição se não houver colisão
+            self.x, self.y = novo_x, novo_y  # Atualiza posição se não houver colisão
             self.rect.topleft = (self.x, self.y)  # Atualiza a posição do rect
 
         # Controla a taxa de atualização da animação
         if movendo:
             self.animacao_contador += 1
-            if self.animacao_contador % 5 == 0: # Atualiza o frame a cada 5 ciclos
+            if self.animacao_contador % 5 == 0:  # Atualiza o frame a cada 5 ciclos
                 self.frame = (self.frame + 1) % len(self.direcao)
         else:
             self.frame = 0
             self.animacao_contador = 0  # Reseta o contador quando parado
 
-        #  Atualiza imagem e rect com o novo frame e posição
+        # Atualiza imagem e rect com o novo frame e posição
         self.image = self.direcao[self.frame]
         self.rect.topleft = (self.x, self.y)
 
