@@ -8,7 +8,7 @@ from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_prim
 class Game:
     def __init__(self):
         self.tela = tela
-        pygame.display.set_caption("A Ordem dos Discretos")
+        pygame.display.set_caption("Elinaldo e a Torre Discreta")
         self.clock = clock
         self.running = True
         self.mapa_atual = "primeiro mapa"
@@ -175,19 +175,19 @@ class Game:
 
     def tela_inicial(self):
         """Exibe a tela inicial com um botão 'Play'."""
-        #fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)
-        fonte_botao = pygame.font.Font('PressStart2P-Regular.ttf', 20)
+        fonte_botao = pygame.font.Font('PressStart2P-Regular.ttf', 18)
 
         # Carregar imagem de fundo
         fundo = pygame.image.load("Tela inicial do game.png")  # Certifique-se de ter essa imagem no diretório do jogo
         fundo = pygame.transform.scale(fundo, (Largura, Altura))
 
         # Configuração do botão "Play"
-        botao_largura, botao_altura = 200, 60
+        botao_largura, botao_altura = 250, 75
         botao_x = (Largura - botao_largura) // 2
         botao_y = Altura // 2 - 100
-        cor_botao = (238, 173, 45)
-        cor_botao_hover = (218, 153, 25)
+        cor_botao = (19, 37, 58)
+        cor_botao_hover = (14, 27, 48)
+        cor_borda = (74, 77, 106)
 
         while True:
             for event in pygame.event.get():
@@ -203,11 +203,6 @@ class Game:
             # Desenhar fundo
             self.tela.blit(fundo, (0, 0))
 
-            # Desenhar título
-            # texto_surface = fonte_tela_inicial.render("A Ordem dos Discretos", True, (255, 255, 255))
-            # texto_rect = texto_surface.get_rect(center=(Largura // 2, Altura // 3))
-            # self.tela.blit(texto_surface, texto_rect)
-
             # Desenhar botão "Play"
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if botao_x <= mouse_x <= botao_x + botao_largura and botao_y <= mouse_y <= botao_y + botao_altura:
@@ -215,10 +210,23 @@ class Game:
             else:
                 pygame.draw.rect(self.tela, cor_botao, (botao_x, botao_y, botao_largura, botao_altura), border_radius=10)
 
-            # Texto do botão
-            texto_botao = fonte_botao.render("Play", True, (255, 255, 255))
-            texto_botao_rect = texto_botao.get_rect(center=(botao_x + botao_largura // 2, botao_y + botao_altura // 2))
-            self.tela.blit(texto_botao, texto_botao_rect)
+            # Desenhar borda do botão
+            pygame.draw.rect(self.tela, cor_borda, (botao_x, botao_y, botao_largura, botao_altura), width=3, border_radius=10)
+
+            # Texto do botão com contorno
+            texto_botao = "Iniciar Jogo"
+            texto_surface = fonte_botao.render(texto_botao, True, (219, 147, 51))  # Cor principal
+            texto_surface_sombra = fonte_botao.render(texto_botao, True, (0, 0, 0))  # Cor do contorno
+            texto_botao_rect = texto_surface.get_rect(center=(botao_x + botao_largura // 2, botao_y + botao_altura // 2))
+
+            # Desenhar o contorno (deslocado em várias direções)
+            self.tela.blit(texto_surface_sombra, (texto_botao_rect.x - 1, texto_botao_rect.y))  # Esquerda
+            self.tela.blit(texto_surface_sombra, (texto_botao_rect.x + 1, texto_botao_rect.y))  # Direita
+            self.tela.blit(texto_surface_sombra, (texto_botao_rect.x, texto_botao_rect.y - 1))  # Cima
+            self.tela.blit(texto_surface_sombra, (texto_botao_rect.x, texto_botao_rect.y + 1))  # Baixo
+
+            # Desenhar o texto principal
+            self.tela.blit(texto_surface, texto_botao_rect)
 
             pygame.display.update()
 
