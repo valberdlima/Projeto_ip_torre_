@@ -1,4 +1,5 @@
 import pygame
+import pygame.mixer
 from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, font_mensagem, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
 from assets import mapas, player_spritesheet2, player_spritesheet3
 from player import Player, atualizar_sprites
@@ -12,6 +13,14 @@ class Game:
         self.running = True
         self.mapa_atual = "primeiro mapa"
         self.player = Player(30, Altura // 2)
+
+        # Inicializar o mixer de som
+        pygame.mixer.init()
+
+        # Carregar e tocar a música em loop
+        pygame.mixer.music.load("Hobbit OST 8 bits.mp3")  # Substitua pelo nome do arquivo MP3
+        pygame.mixer.music.set_volume(0.05)  # Ajuste o volume (0.0 a 1.0)
+        pygame.mixer.music.play(-1)  # -1 faz a música tocar em loop
 
         # Carrega os sprites dos coletáveis
         self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau_fechado.png"), (46, 36))
@@ -149,19 +158,69 @@ class Game:
         texto_rect = texto_surface.get_rect(topright=(Largura - 10, 10))
         self.tela.blit(texto_surface, texto_rect)
 
+    def transicao(self, duracao, tipo="fade-in"):
+        """Efeito de transição suave (fade-in ou fade-out)."""
+        overlay = pygame.Surface((Largura, Altura))
+        overlay.fill((0, 0, 0))
+
+        for alpha in range(0, 255, int(255 / (FPS * duracao))):
+            if tipo == "fade-in":
+                overlay.set_alpha(255 - alpha)
+            elif tipo == "fade-out":
+                overlay.set_alpha(alpha)
+
+            self.tela.blit(overlay, (0, 0))
+            pygame.display.update()
+            self.clock.tick(FPS)
+
     def tela_inicial(self):
-        inicio_tempo = pygame.time.get_ticks()
-        fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)
-        while pygame.time.get_ticks() - inicio_tempo < 3000:
+        """Exibe a tela inicial com um botão 'Play'."""
+        #fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)
+        fonte_botao = pygame.font.Font('PressStart2P-Regular.ttf', 20)
+
+        # Carregar imagem de fundo
+        fundo = pygame.image.load("Tela inicial do game.png")  # Certifique-se de ter essa imagem no diretório do jogo
+        fundo = pygame.transform.scale(fundo, (Largura, Altura))
+
+        # Configuração do botão "Play"
+        botao_largura, botao_altura = 200, 60
+        botao_x = (Largura - botao_largura) // 2
+        botao_y = Altura // 2 - 100
+        cor_botao = (238, 173, 45)
+        cor_botao_hover = (218, 153, 25)
+
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return False
-            self.tela.fill((0, 0, 0))
-            texto_surface = fonte_tela_inicial.render("A Ordem dos Discretos", True, (255, 255, 255))
-            texto_rect = texto_surface.get_rect(center=(Largura // 2, Altura // 2))
-            self.tela.blit(texto_surface, texto_rect)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:  # Clique esquerdo
+                        mouse_x, mouse_y = pygame.mouse.get_pos()
+                        if botao_x <= mouse_x <= botao_x + botao_largura and botao_y <= mouse_y <= botao_y + botao_altura:
+                            self.transicao(1, tipo="fade-out")  # Adiciona transição ao sair da tela inicial
+                            return True  # Inicia o jogo
+
+            # Desenhar fundo
+            self.tela.blit(fundo, (0, 0))
+
+            # Desenhar título
+            # texto_surface = fonte_tela_inicial.render("A Ordem dos Discretos", True, (255, 255, 255))
+            # texto_rect = texto_surface.get_rect(center=(Largura // 2, Altura // 3))
+            # self.tela.blit(texto_surface, texto_rect)
+
+            # Desenhar botão "Play"
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+            if botao_x <= mouse_x <= botao_x + botao_largura and botao_y <= mouse_y <= botao_y + botao_altura:
+                pygame.draw.rect(self.tela, cor_botao_hover, (botao_x, botao_y, botao_largura, botao_altura), border_radius=10)
+            else:
+                pygame.draw.rect(self.tela, cor_botao, (botao_x, botao_y, botao_largura, botao_altura), border_radius=10)
+
+            # Texto do botão
+            texto_botao = fonte_botao.render("Play", True, (255, 255, 255))
+            texto_botao_rect = texto_botao.get_rect(center=(botao_x + botao_largura // 2, botao_y + botao_altura // 2))
+            self.tela.blit(texto_botao, texto_botao_rect)
+
             pygame.display.update()
-        return True
 
     def game_loop(self):
         if not self.tela_inicial():
@@ -271,7 +330,8 @@ class Game:
             self.desenhar_dialogo()
             self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()
-
+        
+        pygame.mixer.music.stop()
         pygame.quit()
 
 if __name__ == "__main__":
