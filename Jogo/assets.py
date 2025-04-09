@@ -18,6 +18,7 @@ player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Caj
 
 BOSS_WIND_SPRITESHEET = pygame.image.load("boss_sprites.png").convert_alpha()
 print(BOSS_WIND_SPRITESHEET.get_width(), BOSS_WIND_SPRITESHEET.get_height())
+
 # funcao para carregar os sprites do spritesheet
 def get_sprites(sheet, linhas, colunas, largura, altura):
     sprites = []
@@ -37,10 +38,11 @@ ANIM_Esquerda = sprites[117:126]
 ANIM_Direita = sprites[143:152]
 ANIM_Cima = sprites[104:113]
 
-ANIM_Baixo_Ataque = sprites[53:62]
-ANIM_Esquerda_Ataque = sprites[66:75]
-ANIM_Direita_Ataque = sprites[79:88]
-ANIM_Cima_Ataque = sprites[92:101]
+sprites2 = get_sprites(player_spritesheet3, 54, 13, SPRITE_Largura, SPRITE_Altura)
+ANIM_Baixo_Ataque = sprites2[78:86]
+ANIM_Esquerda_Ataque = sprites2[65:73]
+ANIM_Direita_Ataque = sprites2[91:99]
+ANIM_Cima_Ataque = sprites2[52:60]
 
 # FUNÇÃO DE SLICE
 def get_sprites(sheet, linhas, colunas, largura, altura):

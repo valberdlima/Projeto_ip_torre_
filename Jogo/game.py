@@ -300,7 +300,7 @@ class Game:
                                 self.dialogo_frame_contador = 0
 
             if not self.dialogo_ativa:
-                self.player.move(keys, colisoes)
+                self.player.move(keys, colisoes, self.objetos_coletados)
 
             self.player.draw(self.tela)
 

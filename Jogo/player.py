@@ -12,10 +12,10 @@ def atualizar_sprites(player, novo_spritesheet):
     ANIM_Direita = sprites[143:152]
     ANIM_Cima = sprites[104:113]
 
-    ANIM_Baixo_Ataque = sprites[53:62]
-    ANIM_Esquerda_Ataque = sprites[66:75]
-    ANIM_Direita_Ataque = sprites[79:88]
-    ANIM_Cima_Ataque = sprites[92:101]
+    ANIM_Baixo_Ataque = sprites[78:86]
+    ANIM_Esquerda_Ataque = sprites[65:73]
+    ANIM_Direita_Ataque = sprites[91:99]
+    ANIM_Cima_Ataque = sprites[52:60]
 
     player.direcao = ANIM_Baixo # Atualiza a direção atual do jogador
 
@@ -35,8 +35,9 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (self.x, self.y)
 
-    def move(self, keys, colisoes):
+    def move(self, keys, colisoes, objetos_coletados):
         movendo = False
+        atacando = False
         novo_x, novo_y = self.x, self.y
 
         # Verifica as teclas pressionadas e atualiza a posição do jogador
@@ -57,6 +58,18 @@ class Player(pygame.sprite.Sprite):
             self.direcao = ANIM_Baixo
             movendo = True
 
+        # Verifica se o jogador está atacando
+        if keys[pygame.K_a] and objetos_coletados > 1:  # Tecla de ataque
+            atacando = True
+            if self.direcao == ANIM_Baixo:
+                self.direcao = ANIM_Baixo_Ataque
+            elif self.direcao == ANIM_Esquerda:
+                self.direcao = ANIM_Esquerda_Ataque
+            elif self.direcao == ANIM_Direita:
+                self.direcao = ANIM_Direita_Ataque
+            elif self.direcao == ANIM_Cima:
+                self.direcao = ANIM_Cima_Ataque
+
         # Verifica colisões
         jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
         if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
@@ -64,7 +77,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.topleft = (self.x, self.y)  # Atualiza a posição do rect
 
         # Controla a taxa de atualização da animação
-        if movendo:
+        if movendo or atacando:
             self.animacao_contador += 1
             if self.animacao_contador % 5 == 0:  # Atualiza o frame a cada 5 ciclos
                 self.frame = (self.frame + 1) % len(self.direcao)
