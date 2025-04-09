@@ -10,7 +10,7 @@ mapas = {
 # Player spritesheet
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
 player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
-player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (1536, 4224))
+player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (832, 3456))
 
 
 ##print(pygame.image.load("personagem.png").get_size())
@@ -36,6 +36,11 @@ ANIM_Baixo = sprites[130:139]
 ANIM_Esquerda = sprites[117:126]
 ANIM_Direita = sprites[143:152]
 ANIM_Cima = sprites[104:113]
+
+ANIM_Baixo_Ataque = sprites[53:62]
+ANIM_Esquerda_Ataque = sprites[66:75]
+ANIM_Direita_Ataque = sprites[79:88]
+ANIM_Cima_Ataque = sprites[92:101]
 
 # FUNÇÃO DE SLICE
 def get_sprites(sheet, linhas, colunas, largura, altura):

@@ -354,6 +354,11 @@ class Game:
                     self.mapa_atual = "torre"
                     self.player.x = Largura // 2 - 30
                     self.player.y = 780
+
+                    pygame.mixer.music.load("OST BOSS FIGHT.mp3")
+                    pygame.mixer.music.set_volume(0.05)
+                    pygame.mixer.music.play(-1)
+
                     # instancia o boss só uma vez
                     if self.boss is None:
                         self.boss = Boss(
@@ -379,6 +384,7 @@ class Game:
             self.desenhar_dialogo()
             self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()
+            
         pygame.mixer.music.stop()
         pygame.quit()
 
