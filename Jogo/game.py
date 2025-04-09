@@ -1,5 +1,5 @@
 import pygame
-from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
+from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, SPRITE_Largura, SPRITE_Altura, font_mensagem, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
 from assets import mapas, player_spritesheet2, player_spritesheet3
 from player import Player, atualizar_sprites
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
@@ -139,8 +139,8 @@ class Game:
             self.tela.blit(surface_caixa, (caixa_x, caixa_y))
 
             # Renderiza o texto com sombra
-            texto_surface_sombra = font_dialogo.render(self.mensagem_texto, True, (40, 40, 40))
-            texto_surface = font_dialogo.render(self.mensagem_texto, True, (255, 215, 0))
+            texto_surface_sombra = font_mensagem.render(self.mensagem_texto, True, (40, 40, 40))
+            texto_surface = font_mensagem.render(self.mensagem_texto, True, (255, 215, 0))
             texto_rect = texto_surface.get_rect(center=(caixa_x + largura // 2, caixa_y + altura // 2))
             self.tela.blit(texto_surface_sombra, (texto_rect.x + 2, texto_rect.y + 2))
             self.tela.blit(texto_surface, texto_rect)
