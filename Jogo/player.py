@@ -12,13 +12,21 @@ def atualizar_sprites(player, novo_spritesheet):
     ANIM_Cima = sprites[104:113]
     player.direcao = ANIM_Baixo # Atualiza a direção atual do jogador
 
-class Player:
+# [GPT] Agora a classe herda de Sprite
+class Player(pygame.sprite.Sprite):  
     def __init__(self, x, y):
+        super().__init__()  # [GPT] Inicializa o Sprite
+
         self.x = x
         self.y = y
         self.frame = 0
         self.direcao = ANIM_Baixo
         self.animacao_contador = 0  # Contador para controlar a animação
+
+        # [GPT] Cria imagem e rect para usar com grupos do pygame
+        self.image = self.direcao[self.frame]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (self.x, self.y)
 
     def move(self, keys, colisoes):
         movendo = False
@@ -46,6 +54,7 @@ class Player:
         jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
         if not any(jogador_rect.colliderect(colisao) for colisao in colisoes):
             self.x, self.y = novo_x, novo_y # Atualiza posição se não houver colisão
+            self.rect.topleft = (self.x, self.y)  # [GPT] Atualiza a posição do rect
 
         # Controla a taxa de atualização da animação
         if movendo:
@@ -55,6 +64,10 @@ class Player:
         else:
             self.frame = 0
             self.animacao_contador = 0  # Reseta o contador quando parado
+
+        # [GPT] Atualiza imagem e rect com o novo frame e posição
+        self.image = self.direcao[self.frame]
+        self.rect.topleft = (self.x, self.y)
 
     def draw(self, screen):
         screen.blit(self.direcao[self.frame], (self.x, self.y))
