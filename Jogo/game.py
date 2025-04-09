@@ -4,7 +4,7 @@ from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instruc
 from assets import mapas, player_spritesheet2, player_spritesheet3, sprite_barra_vida
 from player import Player, atualizar_sprites
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
-from boss import Boss, WindGust
+from Boss import Boss, WindGust
 
 class Game:
     def __init__(self):
@@ -301,7 +301,7 @@ class Game:
                                 self.dialogo_frame_contador = 0
 
             if not self.dialogo_ativa:
-                self.player.move(keys, colisoes)
+                self.player.move(keys, colisoes, self.objetos_coletados)
 
             # desenha o jogador e a barra de vida
             self.player.draw(self.tela)
