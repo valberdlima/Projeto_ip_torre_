@@ -1,5 +1,5 @@
 import pygame
-from config import Largura, Altura, SPRITE_Largura, SPRITE_Altura
+from config import Largura, Altura, SPRITE_Largura, SPRITE_Altura, SPRITE_Largura_BOSS,SPRITE_Altura_BOSS
 
 # carrega as imagens
 mapas = {
@@ -7,11 +7,17 @@ mapas = {
     "segundo mapa": pygame.transform.scale(pygame.image.load("mapa_2.png"), (Largura, Altura)),
     "torre": pygame.transform.scale(pygame.image.load("mapa_torre.png"), (Largura, Altura))
 }
-
+# Player spritesheet
 player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
 player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
 player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (1536, 4224))
 
+
+##print(pygame.image.load("personagem.png").get_size())
+# Boss Spritesheet
+
+BOSS_WIND_SPRITESHEET = pygame.image.load("boss_sprites.png").convert_alpha()
+print(BOSS_WIND_SPRITESHEET.get_width(), BOSS_WIND_SPRITESHEET.get_height())
 # funcao para carregar os sprites do spritesheet
 def get_sprites(sheet, linhas, colunas, largura, altura):
     sprites = []
@@ -30,3 +36,27 @@ ANIM_Baixo = sprites[130:139]
 ANIM_Esquerda = sprites[117:126]
 ANIM_Direita = sprites[143:152]
 ANIM_Cima = sprites[104:113]
+
+# FUNÇÃO DE SLICE
+def get_sprites(sheet, linhas, colunas, largura, altura):
+    sprites = []
+    for linha in range(linhas):
+        for coluna in range(colunas):
+            x = coluna * largura
+            y = linha  * altura
+            sprite = sheet.subsurface(pygame.Rect(x, y, largura, altura))
+            sprites.append(sprite)
+    return sprites
+
+# BOSS ANIMAÇÃO
+boss_sprites = get_sprites(BOSS_WIND_SPRITESHEET, 25, 5, SPRITE_Largura_BOSS, SPRITE_Altura_BOSS)
+
+ANIM_BOSS_WALK_DOWN  = boss_sprites[ 0: 5]   # linha 0
+ANIM_BOSS_WALK_LEFT  = boss_sprites[ 5:10]   # linha 1
+ANIM_BOSS_WALK_RIGHT = boss_sprites[10:15]   # linha 2
+ANIM_BOSS_WALK_UP    = boss_sprites[15:20]   # linha 3
+
+ANIM_BOSS_IDLE       = boss_sprites[20:25]   # linha 4
+ANIM_BOSS_ATTACK     = boss_sprites[25:30]   # linha 5
+ANIM_BOSS_DAMAGE     = boss_sprites[30:35]   # linha 6
+ANIM_BOSS_DEATH      = boss_sprites[35:40]   # linha 7
