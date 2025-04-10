@@ -62,8 +62,19 @@ class Game:
         self.dialogo_caveira_ativa = False
         self.coleta_pendente = None
 
-        # Contador de objetos coletados
+        # Contador geral de objetos coletados
         self.objetos_coletados = 0
+        # Inicializar os contadores de cada coletável
+        self.contadores_coletaveis = {
+            "manto": 0,
+            "cajado": 0,
+            "livro": 0  
+        }
+        
+        # carregar a imagem da moldura dos contadores
+        self.moldura_coletaveis = pygame.image.load("moldura_coletaveis.png").convert_alpha()
+        self.moldura_coletaveis = pygame.transform.scale(self.moldura_coletaveis, (300, 150))
+                     
         # Carregar a imagem da caixa de diálogo
         self.caixa_dialogo_img = pygame.image.load("Caixa_Texto_Com_Foto.png").convert_alpha()
         self.caixa_dialogo_largura, self.caixa_dialogo_altura = self.caixa_dialogo_img.get_size()
@@ -222,12 +233,29 @@ class Game:
             
             self.mensagem_tempo -= 1
 
-    def desenhar_contador(self):
-        """Desenha o contador de objetos coletados no canto superior direito."""
-        texto = f"Objetos coletados: {self.objetos_coletados}"
-        texto_surface = font_mensagem.render(texto, True, (255, 255, 255))
-        texto_rect = texto_surface.get_rect(topright=(Largura - 10, 10))
-        self.tela.blit(texto_surface, texto_rect)
+    def desenhar_contadores_separados(self):
+        # desenha a moldura dos coletaveis e os contadores abaixo de cada icone
+        margem_x = 700  # margem direita
+        margem_y = 10  # margem superior
+        espacamento_entre_icones = 66  # espaco horizontal entre os contadores
+        contador_y_offset = 110  # espaco vertical entre a moldura e o contador
+
+        # desenha a moldura dos coletaveis
+        self.tela.blit(self.moldura_coletaveis, (margem_x, 0))
+
+        # lista de contadores para cada coletavel
+        contadores = [
+            self.contadores_coletaveis["cajado"],
+            self.contadores_coletaveis["manto"],
+            self.contadores_coletaveis["livro"]
+        ]
+
+        # desenhar os contadores abaixo de cada icone
+        for i, contador in enumerate(contadores):
+            texto = f"{contador}"
+            texto_surface = font_mensagem.render(texto, True, (255, 255, 255))
+            texto_rect = texto_surface.get_rect(center=(margem_x + 86 + i * espacamento_entre_icones, margem_y + contador_y_offset))
+            self.tela.blit(texto_surface, texto_rect)
 
     def transicao(self, duracao, tipo="fade-in"):
         """Efeito de transição suave (fade-in ou fade-out)."""
@@ -367,6 +395,7 @@ class Game:
                                             coletavel["coletado"] = True
                                             self.mostrar_mensagem("Manto da Sabedoria coletado!", 120)
                                             atualizar_sprites(self.player, player_spritesheet2)
+                                            self.contadores_coletaveis["manto"] += 1  # Incrementa o contador do manto
                                             self.objetos_coletados += 1
                                             self.coleta_pendente = None
                                         self.dialogo_caveira_ativa = False
@@ -417,8 +446,10 @@ class Game:
                             coletavel["coletado"] = True
                             self.mostrar_mensagem("Cajado da Vacuidade coletado!", 120)
                             atualizar_sprites(self.player, player_spritesheet3)
-                            self.objetos_coletados += 1  # Incrementa o contador
-
+                            self.contadores_coletaveis["cajado"] += 1  # Incrementa o contador do cajado
+                            self.objetos_coletados += 1
+                    
+                    
             for coletavel in self.coletaveis[self.mapa_atual]:
                 if coletavel == self.coletaveis[self.mapa_atual][1]:
                     if not coletavel["coletado"]:
@@ -478,7 +509,7 @@ class Game:
             if self.boss_dialogue_active and self.boss and not self.boss.dialogue_complete:
                 self.mostrar_dialogo_boss(self.boss.dialogues[self.boss.dialogue_index], self.boss.dialogue_speakers[self.boss.dialogue_index])
             self.desenhar_dialogo()
-            self.desenhar_contador()  # Desenha o contador em todas as atualizações
+            self.desenhar_contadores_separados()  # desenha a moldura e os contadores
             pygame.display.update()
             
             
