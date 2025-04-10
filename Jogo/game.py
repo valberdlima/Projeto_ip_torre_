@@ -396,6 +396,10 @@ class Game:
                     self.player.x = 440
                     self.player.y = 225
 
+                    pygame.mixer.music.load("Hobbit OST 8 bits.mp3")
+                    pygame.mixer.music.set_volume(0.05)
+                    pygame.mixer.music.play(-1)
+
                     # destroi o boss e limpa os projéteis
                     if self.boss:
                         self.boss.kill()
