@@ -17,8 +17,9 @@ ANIM_BOSS_MORTE = sprites[260:266]
 class WindGust(pygame.sprite.Sprite):
     def __init__(self, x, y, target_x, target_y):
         super().__init__()
-        # Carrega a imagem do projétil
-        self.image = pygame.image.load("boss projetil.png").convert_alpha()  # Substitua "wind_gust.png" pelo caminho correto
+        # Carrega e redimensiona a imagem do projétil
+        original_image = pygame.image.load("boss projetil.png").convert_alpha()
+        self.image = pygame.transform.scale(original_image, (72, 72))  # Ajuste o tamanho aqui
         self.rect = self.image.get_rect(center=(x, y))
 
         # Calcula a direção para o alvo (jogador)
@@ -45,8 +46,9 @@ class WindGust(pygame.sprite.Sprite):
 class Boss(pygame.sprite.Sprite):
     def __init__(self, x, y, all_sprites_group, attack_group, game):
         super().__init__()
-        self.idle_anim = ANIM_BOSS_IDLE
-        self.attack_anim = ANIM_BOSS_ATTACK
+        # Redimensiona as animações do boss
+        self.idle_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_IDLE]  # Ajuste o tamanho aqui
+        self.attack_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_ATTACK]  # Ajuste o tamanho aqui
         self.frame = 0
         self.anim_counter = 0
         self.state = "idle"  # Estado inicial
