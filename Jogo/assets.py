@@ -13,7 +13,7 @@ player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png
 player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (832, 3456))
 
 # barra de vida
-sprite_barra_vida = pygame.image.load("barra_vida.png").convert_alpha()
+sprite_barra_vida = pygame.image.load("sprite_barra_vida.png").convert_alpha()
 
 # sprite para um tamanho menor
 sprite_barra_vida = pygame.transform.scale(sprite_barra_vida, (200, 97))  
