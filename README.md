@@ -91,14 +91,14 @@ Estruturas Condicionais: Condicionais aparecem no game_loop para verificar colis
 
 
 ## Membros da Equipe 
-[Elinaldo Emanoel <eemm>]([url](https://github.com/Emanoelmd)): responsável pelo desenvolvimento das sprites 
-[Lucas Francisco <lesaf>]([url](https://github.com/Lucasesaraujo): responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, tela inicial, trilha sonora, colisões. 
+([Elinaldo Emanoel <eemm>](https://github.com/Emanoelmd)): responsável pelo desenvolvimento das sprites 
+([Lucas Francisco <lesaf>](https://github.com/Lucasesaraujo): responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, tela inicial, trilha sonora, colisões. 
 
-[Júlia Maria <jmcb>]([url](https://github.com/juliamcbezerra): responsável pela ideação, Criação e Ajuste das caixas de diálogo e mensagem de coleta, contador de coleta dos objetos, implementação da mecânica dos coletáveis, Slides da apresentação do projeto e relatório
+([Júlia Maria <jmcb>](https://github.com/juliamcbezerra): responsável pela ideação, Criação e Ajuste das caixas de diálogo e mensagem de coleta, contador de coleta dos objetos, implementação da mecânica dos coletáveis, Slides da apresentação do projeto e relatório
 
-[Millena Ellen <mes4>]([url](https://github.com/ellenpry): Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem 
+([Millena Ellen <mes4>](https://github.com/ellenpry): Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem 
 
-[Valber Roberto <vrl>]([url](https://github.com/valberdlima)): Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
+([Valber Roberto <vrl>](https://github.com/valberdlima)): Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
 
 
 
