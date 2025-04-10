@@ -359,10 +359,13 @@ class Game:
                         self.player.x, self.player.y,
                         SPRITE_Largura, SPRITE_Altura
                     )
-                    for gust in self.boss_attacks:
-                        if gust.rect.colliderect(jogador_rect):
-                            self.mostrar_mensagem("HAHA! Você morrerá!", 60)
-                            gust.kill()
+                    
+                    # fiz alteracao para a vida do personagem diminuir
+                    for gust in self.boss_attacks:  # percorrer os projeteis do boss
+                        if gust.rect.colliderect(jogador_rect):  # verifica colisao com o jogador
+                            self.player.tomar_dano(10)  # reduz a vida do jogador em 10
+                            self.mostrar_mensagem("HAHA! Você morrerá", 60)  # exibe uma mensagem
+                            gust.kill()  # remove o projetil dps da colisao
                 else:
                     # Desenha o boss parado durante o diálogo
                     self.tela.blit(self.boss.image, self.boss.rect)
@@ -425,6 +428,7 @@ class Game:
 
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
+                
                 if not coletavel["coletado"]:
                     coletavel_rect_bau = self.coletavel_img2.get_rect(topleft=coletavel["pos"])
                     coletavel_rect_esq = self.coletavel_img4.get_rect(topleft=coletavel["pos"])
@@ -451,6 +455,7 @@ class Game:
                     
                     
             for coletavel in self.coletaveis[self.mapa_atual]:
+                
                 if coletavel == self.coletaveis[self.mapa_atual][1]:
                     if not coletavel["coletado"]:
                         self.tela.blit(self.coletavel_img2, coletavel["pos"])
@@ -488,8 +493,10 @@ class Game:
                             attack_group=self.boss_attacks,
                             game=self
                         )
-                    self.all_sprites.add(self.boss)    
+                    self.all_sprites.add(self.boss)  
+                      
             elif self.mapa_atual == "torre":
+                
                 if 415 < self.player.x < 600 and self.player.y >= 790:
                     self.mapa_atual = "segundo mapa"
                     self.player.x = 440

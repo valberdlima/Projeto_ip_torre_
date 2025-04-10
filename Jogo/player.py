@@ -117,4 +117,11 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(screen, (0, 255, 0), (barra_x, barra_y, largura_atual, barra_altura))  # vida atual (verde)
 
         # desenha o sprite da moldura ao redor da barra de vida
-        screen.blit(sprite_barra_vida, (moldura_x, moldura_y))  # dps eu ajusto a posicao da moldura
+        screen.blit(sprite_barra_vida, (moldura_x, moldura_y)) 
+    
+    def tomar_dano(self, dano):
+        # reduz a vida do jogador
+        self.vida_atual -= dano
+        if self.vida_atual <= 0:
+            self.vida_atual = 0  # evita valores negativos
+            print("O jogador morreu!")  
