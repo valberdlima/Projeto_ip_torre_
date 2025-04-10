@@ -20,7 +20,6 @@ sprite_barra_vida = pygame.transform.scale(sprite_barra_vida, (200, 97))
 
 # Boss Spritesheet
 BOSS_WIND_SPRITESHEET = pygame.image.load("boss_sprites.png").convert_alpha()
-print(BOSS_WIND_SPRITESHEET.get_width(), BOSS_WIND_SPRITESHEET.get_height())
 
 # funcao para carregar os sprites do spritesheet
 def get_sprites(sheet, linhas, colunas, largura, altura):
