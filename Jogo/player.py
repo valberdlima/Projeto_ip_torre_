@@ -106,7 +106,7 @@ class Player(pygame.sprite.Sprite):
         
         barra_x = moldura_x + 91 # posicao horizontal para alinhar a barra
         barra_y = moldura_y + 60  # posicao vertical para alinhar a barra
-        barra_largura = 70  # largura total da barra
+        barra_largura = 82  # largura total da barra
         barra_altura = 20  # altura da barra
 
         # calcula a largura da barra com base na vida atual
