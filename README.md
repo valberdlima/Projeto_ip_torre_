@@ -25,6 +25,8 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
 2. Certifique-se de que as imagens e arquivos `.py` estão na estrutura correta:
 
 
+
+
 ## Ferramentas, Bibliotecas e Frameworks Utilizados
 ### Bibliotecas
 - **Pygame**  
@@ -55,30 +57,36 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
 - **Microsoft Teams**  
   - **Uso**: Comunicação e colaboração entre a equipe durante o desenvolvimento.  
   - **Justificativa**: Plataforma robusta para reuniões, compartilhamento de arquivos e organização, essencial para coordenar o trabalho em equipe, especialmente de forma remota.
+
  
   
 ## Estruturação do Código 
 ### Modularização:
 Divisão em arquivos com funções específicas:
-**config.py**: Configurações (ex.: Largura, FPS).
-**assets.py**: Carrega recursos (ex.: mapas, sprites).
-**player.py**: Lógica do jogador.
-**Boss.py**: Lógica do boss.
-**game.py**: Loop principal.
+- **config.py**: Configurações (ex.: Largura, FPS).
+- **assets.py**: Carrega recursos (ex.: mapas, sprites).
+- **player.py**: Lógica do jogador.
+- **Boss.py**: Lógica do boss.
+- **game.py**: Loop principal.
 
 ### Orientação a Objetos:
 Uso de classes para representar elementos do jogo:
-**Game:** Controla o fluxo (início, mapas, transições)
-**Player**: Controla movimento e coleta.
-**Boss:** Gerencia ataques e diálogos.
-**WindGust:** Projéteis do boss.
+- **Game:** Controla o fluxo (início, mapas, transições)
+- **Player**: Controla movimento e coleta.
+- **Boss:** Gerencia ataques e diálogos.
+- **WindGust:** Projéteis do boss.
+
 
 
 ## Conceitos utilizados aprendidos na disciplina 
-Durante o desenvolvimento, aplicamos diversos conceitos de programação aprendidos na disciplina, entre eles:
-Loops: O loop principal do jogo, em game.py (game_loop), usa um while self.running para atualizar a tela, processar eventos e mover o jogador a cada frame, garantindo jogabilidade contínua. Outro exemplo está no método update da classe Boss em Boss.py, onde um loop implícito (via contador self.anim_counter) anima os ataques do boss.
-Funções: Funções foram amplamente usadas para modularizar o código, como get_sprites em assets.py, que corta spritesheets em animações reutilizáveis para o jogador e o boss. A função mostrar_dialogo_boss em game.py exibe diálogos letra por letra, controlando a interação com o usuário.
-Estruturas Condicionais: Condicionais aparecem no game_loop para verificar colisões (ex.: if jogador_rect.colliderect(coletavel_rect_esq)) e trocar mapas, entre outros momentos.
+Durante o desenvolvimento, aplicamos diversos conceitos aprendidos na disciplina, entre eles:
+
+**Loops**: O loop principal do jogo, em game.py (game_loop), usa um while self.running para atualizar a tela, processar eventos e mover o jogador a cada frame, garantindo jogabilidade contínua. Outro exemplo está no método update da classe Boss em Boss.py, onde um loop implícito (via contador self.anim_counter) anima os ataques do boss.
+
+**Funções**: Funções foram amplamente usadas para modularizar o código, como get_sprites em assets.py, que corta spritesheets em animações reutilizáveis para o jogador e o boss. A função mostrar_dialogo_boss em game.py exibe diálogos letra por letra, controlando a interação com o usuário.
+
+**Estruturas Condicionais:** Condicionais aparecem no game_loop para verificar colisões (ex.: if jogador_rect.colliderect(coletavel_rect_esq)) e trocar mapas, entre outros momentos.
+
 
 
 ## Maiores desafios e respectivas lições aprendidas 
@@ -91,7 +99,7 @@ Estruturas Condicionais: Condicionais aparecem no game_loop para verificar colis
 
 
 ## Membros da Equipe 
-[Elinaldo Emanoel <eemm>](https://github.com/Emanoelmd)): responsável pelo desenvolvimento das sprites 
+[Elinaldo Emanoel <eemm>](https://github.com/Emanoelmd): responsável pelo desenvolvimento das sprites 
 
 [Lucas Francisco <lesaf>](https://github.com/Lucasesaraujo): responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, tela inicial, trilha sonora, colisões. 
 
@@ -99,7 +107,7 @@ Estruturas Condicionais: Condicionais aparecem no game_loop para verificar colis
 
 [Millena Ellen <mes4>](https://github.com/ellenpry): Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem 
 
-[Valber Roberto <vrl>](https://github.com/valberdlima)): Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
+[Valber Roberto <vrl>](https://github.com/valberdlima): Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
 
 
 
