@@ -17,9 +17,8 @@ ANIM_BOSS_MORTE = sprites[260:266]
 class WindGust(pygame.sprite.Sprite):
     def __init__(self, x, y, target_x, target_y):
         super().__init__()
-        # >>> GPT: Cria imagem circular transparente com efeito de vento
-        self.image = pygame.Surface((30, 30), pygame.SRCALPHA)
-        pygame.draw.circle(self.image, (180, 220, 255, 180), (15, 15), 15)
+        # Carrega a imagem do projétil
+        self.image = pygame.image.load("boss projetil.png").convert_alpha()  # Substitua "wind_gust.png" pelo caminho correto
         self.rect = self.image.get_rect(center=(x, y))
 
         # Calcula a direção para o alvo (jogador)
@@ -32,11 +31,11 @@ class WindGust(pygame.sprite.Sprite):
         self.velocity_y = self.speed * dy / distance
 
     def update(self):
-        # >>> GPT: Movimento contínuo do projétil
+        # Movimento contínuo do projétil
         self.rect.x += self.velocity_x
         self.rect.y += self.velocity_y
 
-        # mata se sair da tela
+        # Mata o projétil se sair da tela
         if (self.rect.right < 0 or self.rect.left > Largura or 
             self.rect.bottom < 0 or self.rect.top > Altura):
             self.kill()
