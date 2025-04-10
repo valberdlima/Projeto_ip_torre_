@@ -51,8 +51,7 @@ class Game:
         self.dialogo_ativa = True
         self.dialogo_textos = [
             "Oxe… Que lugar é esse? Como vim parar aqui?",
-            "….",
-            "Devo estar enlouquecendo… ou pego no sono\nestudando para a prova de matemática discreta"
+            "Devo estar louco... ou ter pego no sono estudando para a prova de matemática discreta"
         ]
         self.dialogo_caveira = ["MEU DEUS!! Kenneth Rosen"]
         self.dialogo_atual_lista = self.dialogo_textos
@@ -65,6 +64,11 @@ class Game:
 
         # Contador de objetos coletados
         self.objetos_coletados = 0
+        # Carregar a imagem da caixa de diálogo
+        self.caixa_dialogo_img = pygame.image.load("Caixa_Texto_Com_Foto.png").convert_alpha()
+        self.caixa_dialogo_largura, self.caixa_dialogo_altura = self.caixa_dialogo_img.get_size()
+        self.caixa_dialogo_img = pygame.transform.scale(self.caixa_dialogo_img, (460, 155))  # Ajuste para o tamanho desejado
+        self.caixa_dialogo_largura, self.caixa_dialogo_altura = self.caixa_dialogo_img.get_size()
 
     def quebrar_texto(self, texto, largura_max):
         """Divide o texto em linhas para caber na largura máxima."""
@@ -104,15 +108,24 @@ class Game:
         if not self.dialogo_ativa:
             return
 
-        largura, altura, linhas = self.calcular_tamanho_caixa(self.dialogo_atual_lista[self.dialogo_atual])
-        caixa_x, caixa_y = DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y - (altura - DIALOGO_CAIXA_ALTURA_MIN)
+        # Usar o tamanho fixo da imagem (sem redimensionamento)
+        largura = self.caixa_dialogo_largura
+        altura = self.caixa_dialogo_altura
+        caixa_x = DIALOGO_CAIXA_X  # Mantém a imagem na posição original
+        caixa_y = DIALOGO_CAIXA_Y
 
-        pygame.draw.rect(self.tela, (10, 10, 10), (caixa_x + 5, caixa_y + 5, largura, altura), border_radius=10)
-        surface_caixa = pygame.Surface((largura, altura), pygame.SRCALPHA)
-        pygame.draw.rect(surface_caixa, (30, 30, 30, 220), (0, 0, largura, altura), border_radius=10)
-        pygame.draw.rect(surface_caixa, (100, 100, 100), (0, 0, largura, altura), 3, border_radius=10)
-        self.tela.blit(surface_caixa, (caixa_x, caixa_y))
+        # Desenhar a imagem da caixa de diálogo na tela (sem redimensionar)
+        self.tela.blit(self.caixa_dialogo_img, (caixa_x, caixa_y))
 
+        # Definir margens ajustadas para evitar o rosto do personagem
+        margem_esquerda = 135  
+        margem_superior = 55   
+
+        # Ajustar a posição do texto principal
+        texto_x = caixa_x + margem_esquerda
+        texto_y = caixa_y + margem_superior
+
+        # Atualizar o texto do diálogo (lógica de animação de letras)
         if self.dialogo_letra_contador < len(self.dialogo_atual_lista[self.dialogo_atual]):
             self.dialogo_frame_contador += 1
             if self.dialogo_frame_contador >= DIALOGO_VELOCIDADE:
@@ -120,16 +133,22 @@ class Game:
                 self.dialogo_texto_atual = self.dialogo_atual_lista[self.dialogo_atual][:self.dialogo_letra_contador]
                 self.dialogo_frame_contador = 0
 
-        linhas_atuais = self.quebrar_texto(self.dialogo_texto_atual, DIALOGO_CAIXA_LARGURA_MAX - 2 * DIALOGO_MARGEM)
+        # Desenhar o texto sobre a caixa, com margens ajustadas
+        linhas_atuais = self.quebrar_texto(self.dialogo_texto_atual, largura - margem_esquerda - DIALOGO_MARGEM)
         for i, linha in enumerate(linhas_atuais):
             texto_surface = font_dialogo.render(linha, True, (200, 200, 200))
-            texto_rect = texto_surface.get_rect(topleft=(caixa_x + DIALOGO_MARGEM, caixa_y + DIALOGO_MARGEM + i * font_dialogo.get_height()))
+            texto_rect = texto_surface.get_rect(topleft=(texto_x, texto_y + i * font_dialogo.get_height()))
             self.tela.blit(texto_surface, texto_rect)
 
+        # Desenhar a instrução "[ESPAÇO]" quando o texto estiver completo
         if self.dialogo_letra_contador >= len(self.dialogo_atual_lista[self.dialogo_atual]):
             instrucao_texto = "[ESPAÇO]"
             instrucao_surface = font_instrucao.render(instrucao_texto, True, (150, 150, 150))
-            instrucao_rect = instrucao_surface.get_rect(bottomright=(caixa_x + largura - DIALOGO_MARGEM, caixa_y + altura - DIALOGO_MARGEM))
+            # Ajustar apenas a posição vertical (descer mais)
+            ajuste_vertical_espaco = 10  # Ajuste este valor para descer mais a mensagem "[ESPAÇO]"
+            instrucao_rect = instrucao_surface.get_rect(
+                bottomright=(caixa_x + largura - DIALOGO_MARGEM, caixa_y + altura - DIALOGO_MARGEM + ajuste_vertical_espaco)
+            )
             self.tela.blit(instrucao_surface, instrucao_rect)
 
     def mostrar_mensagem(self, texto, duracao):
