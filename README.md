@@ -25,7 +25,13 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
 2. Certifique-se de que as imagens e arquivos `.py` estão na estrutura correta:
 
 <br><br> 
-#
+## Imagens do Jogo
+![Tela Inicial](Imagens_Jogo_Relatorio/tela_inicial.png)
+![Primeiro mapa](Imagens_Jogo_Relatorio/primeiro_mapa.png)
+![Coleta de objeto](Imagens_Jogo_Relatorio/coleta_cajado.png)
+![Luta com o Boss](Imagens_Jogo_Relatorio/ataque_boss.png)
+
+
 ## Ferramentas, Bibliotecas e Frameworks Utilizados
 ### Bibliotecas
 - **Pygame**  
