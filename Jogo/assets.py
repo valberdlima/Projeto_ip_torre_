@@ -58,14 +58,15 @@ def get_sprites(sheet, linhas, colunas, largura, altura):
     return sprites
 
 # BOSS ANIMAÇÃO
-boss_sprites = get_sprites(BOSS_WIND_SPRITESHEET, 25, 5, SPRITE_Largura_BOSS, SPRITE_Altura_BOSS)
+boss_spritesheet = pygame.transform.scale(pygame.image.load("boss spritesheet.png"), (832, 3456))
+boss_sprites = get_sprites(boss_spritesheet, 54, 13, SPRITE_Largura_BOSS, SPRITE_Altura_BOSS)
 
-ANIM_BOSS_WALK_DOWN  = boss_sprites[ 0: 5]   # linha 0
-ANIM_BOSS_WALK_LEFT  = boss_sprites[ 5:10]   # linha 1
-ANIM_BOSS_WALK_RIGHT = boss_sprites[10:15]   # linha 2
-ANIM_BOSS_WALK_UP    = boss_sprites[15:20]   # linha 3
+ANIM_BOSS_WALK_DOWN  = boss_sprites[130:139]   # linha 0
+ANIM_BOSS_WALK_LEFT  = boss_sprites[117:126]   # linha 1
+ANIM_BOSS_WALK_RIGHT = boss_sprites[143:152]   # linha 2
+ANIM_BOSS_WALK_UP    = boss_sprites[104:113]   # linha 3
 
 ANIM_BOSS_IDLE       = boss_sprites[20:25]   # linha 4
-ANIM_BOSS_ATTACK     = boss_sprites[25:30]   # linha 5
+ANIM_BOSS_ATTACK     = boss_sprites[172:178]   # linha 5
 ANIM_BOSS_DAMAGE     = boss_sprites[30:35]   # linha 6
 ANIM_BOSS_DEATH      = boss_sprites[35:40]   # linha 7

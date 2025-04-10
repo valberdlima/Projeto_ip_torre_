@@ -3,14 +3,14 @@ from assets import get_sprites, BOSS_WIND_SPRITESHEET
 from config import SPRITE_Largura, SPRITE_Altura, FPS, Largura, Altura
 import random
 
+
+boss_spritesheet = pygame.transform.scale(pygame.image.load("boss spritesheet.png"), (832, 3456))
+
 # --- Primeiro, defina as animações do boss ---
-sprites = get_sprites(
-    BOSS_WIND_SPRITESHEET,
-    colunas=5, linhas=25,
-    largura=SPRITE_Largura, altura=SPRITE_Altura
-)
-ANIM_BOSS_IDLE = sprites[0:8]    # linha 0, cols 0–7
-ANIM_BOSS_ATTACK = sprites[8:16]  # linha 1, cols 0–7
+sprites = get_sprites(boss_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)
+
+ANIM_BOSS_IDLE = sprites[26:33]    # linha 0, cols 0–7
+ANIM_BOSS_ATTACK = sprites[182:188]  # linha 1, cols 0–7
 
 # BOSS Classe do projétil de vento ---
 class WindGust(pygame.sprite.Sprite):
