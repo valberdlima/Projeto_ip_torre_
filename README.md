@@ -26,10 +26,14 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
 
 <br><br> 
 ## Imagens do Jogo
-![Tela Inicial](Imagens_Jogo_Relatorio/tela_inicial.png)
-![Primeiro mapa](Imagens_Jogo_Relatorio/primeiro_mapa.png)
-![Coleta de objeto](Imagens_Jogo_Relatorio/coleta_cajado.png)
-![Luta com o Boss](Imagens_Jogo_Relatorio/ataque_boss.png)
+
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 50px;">
+  <img src="Imagens_Jogo_Relatorio/tela_inicial.png" alt="Tela Inicial" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/primeiro_mapa.png" alt="Primeiro mapa" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/coleta_cajado.png" alt="Coleta de objeto" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/ataque_boss.png" alt="Luta com o Boss" width="460"/>
+</div>
+
 
 
 ## Ferramentas, Bibliotecas e Frameworks Utilizados
