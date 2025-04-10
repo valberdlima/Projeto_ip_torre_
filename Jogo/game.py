@@ -70,6 +70,9 @@ class Game:
         self.caixa_dialogo_img = pygame.transform.scale(self.caixa_dialogo_img, (460, 155))  # Ajuste para o tamanho desejado
         self.caixa_dialogo_largura, self.caixa_dialogo_altura = self.caixa_dialogo_img.get_size()
 
+        # Variáveis para diálogo do boss
+        self.boss_dialogue_active = False
+
     def quebrar_texto(self, texto, largura_max):
         """Divide o texto em linhas para caber na largura máxima."""
         palavras = texto.replace('\n', ' \n ').split(' ')
@@ -146,6 +149,50 @@ class Game:
             instrucao_surface = font_instrucao.render(instrucao_texto, True, (150, 150, 150))
             # Ajustar apenas a posição vertical (descer mais)
             ajuste_vertical_espaco = 10  # Ajuste este valor para descer mais a mensagem "[ESPAÇO]"
+            instrucao_rect = instrucao_surface.get_rect(
+                bottomright=(caixa_x + largura - DIALOGO_MARGEM, caixa_y + altura - DIALOGO_MARGEM + ajuste_vertical_espaco)
+            )
+            self.tela.blit(instrucao_surface, instrucao_rect)
+
+    def mostrar_dialogo_boss(self, texto, speaker):
+        # Usar o tamanho fixo da caixa de diálogo
+        largura = self.caixa_dialogo_largura
+        altura = self.caixa_dialogo_altura
+        caixa_x = DIALOGO_CAIXA_X
+        caixa_y = DIALOGO_CAIXA_Y
+
+        # Escolher a caixa de diálogo com base no falante
+        if speaker == "boss":
+            self.tela.blit(self.boss.boss_dialog_box, (caixa_x, caixa_y))
+            margem_esquerda = 135  # Ajustado para evitar o rosto
+        else:  # player
+            self.tela.blit(self.caixa_dialogo_img, (caixa_x, caixa_y))
+            margem_esquerda = 135  # Mesmo ajuste para consistência
+
+        margem_superior = 55
+        texto_x = caixa_x + margem_esquerda
+        texto_y = caixa_y + margem_superior
+
+        # Atualizar o texto do diálogo (lógica de animação de letras)
+        if self.dialogo_letra_contador < len(texto):
+            self.dialogo_frame_contador += 1
+            if self.dialogo_frame_contador >= DIALOGO_VELOCIDADE:
+                self.dialogo_letra_contador += 1
+                self.dialogo_texto_atual = texto[:self.dialogo_letra_contador]
+                self.dialogo_frame_contador = 0
+
+        # Desenhar o texto sobre a caixa
+        linhas_atuais = self.quebrar_texto(self.dialogo_texto_atual, largura - margem_esquerda - DIALOGO_MARGEM)
+        for i, linha in enumerate(linhas_atuais):
+            texto_surface = font_dialogo.render(linha, True, (200, 200, 200))
+            texto_rect = texto_surface.get_rect(topleft=(texto_x, texto_y + i * font_dialogo.get_height()))
+            self.tela.blit(texto_surface, texto_rect)
+
+        # Desenhar a instrução "[ESPAÇO]" quando o texto estiver completo
+        if self.dialogo_letra_contador >= len(texto):
+            instrucao_texto = "[ESPAÇO]"
+            instrucao_surface = font_instrucao.render(instrucao_texto, True, (150, 150, 150))
+            ajuste_vertical_espaco = 10
             instrucao_rect = instrucao_surface.get_rect(
                 bottomright=(caixa_x + largura - DIALOGO_MARGEM, caixa_y + altura - DIALOGO_MARGEM + ajuste_vertical_espaco)
             )
@@ -266,24 +313,33 @@ class Game:
             keys = pygame.key.get_pressed()
 
             if self.mapa_atual == "torre" and self.boss:
-                # 1) atualiza animações do boss e projéteis
-                self.all_sprites.update()
-                
-                # 2) desenha boss e projéteis
-                self.all_sprites.draw(self.tela)
-                
-                # 3) desenha barra de vida
-                self.boss.draw_health_bar(self.tela)
-                
-                # 4) checa colisão projétil ↔ jogador
-                jogador_rect = pygame.Rect(
-                    self.player.x, self.player.y,
-                    SPRITE_Largura, SPRITE_Altura
-                )
-                for gust in self.boss_attacks:
-                    if gust.rect.colliderect(jogador_rect):
-                        self.mostrar_mensagem("HAHA! Você morrerá!", 60)
-                        gust.kill()
+                # Verifica se o diálogo está ativo
+                if not self.boss.dialogue_complete and not self.boss_dialogue_active:
+                    self.boss_dialogue_active = True
+                    self.dialogo_letra_contador = 0
+                    self.dialogo_texto_atual = ""
+                    self.dialogo_frame_contador = 0
+
+                # 1) Atualiza animações do boss e projéteis apenas após o diálogo
+                if self.boss.dialogue_complete:
+                    self.all_sprites.update()
+                    self.all_sprites.draw(self.tela)
+                    self.boss.draw_health_bar(self.tela)
+
+                    # 4) Checa colisão projétil ↔ jogador
+                    jogador_rect = pygame.Rect(
+                        self.player.x, self.player.y,
+                        SPRITE_Largura, SPRITE_Altura
+                    )
+                    for gust in self.boss_attacks:
+                        if gust.rect.colliderect(jogador_rect):
+                            self.mostrar_mensagem("HAHA! Você morrerá!", 60)
+                            gust.kill()
+                else:
+                    # Desenha o boss parado durante o diálogo
+                    self.tela.blit(self.boss.image, self.boss.rect)
+
+
 
             if self.mapa_atual == "segundo mapa":
                 colisoes = colisoes_segundo_mapa
@@ -295,29 +351,41 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
-                elif event.type == pygame.KEYDOWN and self.dialogo_ativa:
+                elif event.type == pygame.KEYDOWN:
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
-                        if self.dialogo_letra_contador < len(self.dialogo_atual_lista[self.dialogo_atual]):
-                            self.dialogo_letra_contador = len(self.dialogo_atual_lista[self.dialogo_atual])
-                            self.dialogo_texto_atual = self.dialogo_atual_lista[self.dialogo_atual]
-                        else:
-                            self.dialogo_atual += 1
-                            if self.dialogo_atual >= len(self.dialogo_atual_lista):
-                                self.dialogo_ativa = False
-                                if self.dialogo_caveira_ativa:
-                                    if self.coleta_pendente is not None:
-                                        coletavel = self.coletaveis["segundo mapa"][self.coleta_pendente]
-                                        coletavel["coletado"] = True
-                                        self.mostrar_mensagem("Manto da Sabedoria coletado!", 120)
-                                        atualizar_sprites(self.player, player_spritesheet2)
-                                        self.objetos_coletados += 1  # Incrementa o contador
-                                        self.coleta_pendente = None
-                                    self.dialogo_caveira_ativa = False
-                                    self.dialogo_atual_lista = self.dialogo_textos
+                        if self.dialogo_ativa:
+                            if self.dialogo_letra_contador < len(self.dialogo_atual_lista[self.dialogo_atual]):
+                                self.dialogo_letra_contador = len(self.dialogo_atual_lista[self.dialogo_atual])
+                                self.dialogo_texto_atual = self.dialogo_atual_lista[self.dialogo_atual]
                             else:
+                                self.dialogo_atual += 1
+                                if self.dialogo_atual >= len(self.dialogo_atual_lista):
+                                    self.dialogo_ativa = False
+                                    if self.dialogo_caveira_ativa:
+                                        if self.coleta_pendente is not None:
+                                            coletavel = self.coletaveis["segundo mapa"][self.coleta_pendente]
+                                            coletavel["coletado"] = True
+                                            self.mostrar_mensagem("Manto da Sabedoria coletado!", 120)
+                                            atualizar_sprites(self.player, player_spritesheet2)
+                                            self.objetos_coletados += 1
+                                            self.coleta_pendente = None
+                                        self.dialogo_caveira_ativa = False
+                                        self.dialogo_atual_lista = self.dialogo_textos
+                                else:
+                                    self.dialogo_letra_contador = 0
+                                    self.dialogo_texto_atual = ""
+                                    self.dialogo_frame_contador = 0
+                        elif self.boss_dialogue_active and self.boss and not self.boss.dialogue_complete:
+                            if self.dialogo_letra_contador < len(self.boss.dialogues[self.boss.dialogue_index]):
+                                self.dialogo_letra_contador = len(self.boss.dialogues[self.boss.dialogue_index])
+                                self.dialogo_texto_atual = self.boss.dialogues[self.boss.dialogue_index]
+                            else:
+                                self.boss.next_dialogue()
                                 self.dialogo_letra_contador = 0
                                 self.dialogo_texto_atual = ""
                                 self.dialogo_frame_contador = 0
+                                if self.boss.dialogue_complete:
+                                    self.boss_dialogue_active = False
 
             if not self.dialogo_ativa:
                 self.player.move(keys, colisoes, self.objetos_coletados)
@@ -407,6 +475,8 @@ class Game:
                         self.boss = None
 
             self.desenhar_mensagem()
+            if self.boss_dialogue_active and self.boss and not self.boss.dialogue_complete:
+                self.mostrar_dialogo_boss(self.boss.dialogues[self.boss.dialogue_index], self.boss.dialogue_speakers[self.boss.dialogue_index])
             self.desenhar_dialogo()
             self.desenhar_contador()  # Desenha o contador em todas as atualizações
             pygame.display.update()

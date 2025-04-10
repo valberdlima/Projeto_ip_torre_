@@ -44,16 +44,27 @@ class WindGust(pygame.sprite.Sprite):
 
 # BOSS Classe do Boss ---
 class Boss(pygame.sprite.Sprite):
+    # BOSS Classe do Boss ---
     def __init__(self, x, y, all_sprites_group, attack_group, game):
         super().__init__()
         # Redimensiona as animações do boss
-        self.idle_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_IDLE]  # Ajuste o tamanho aqui
-        self.attack_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_ATTACK]  # Ajuste o tamanho aqui
+        self.idle_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_IDLE]
+        self.attack_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_ATTACK]
         self.frame = 0
         self.anim_counter = 0
-        self.state = "idle"  # Estado inicial
-        self.dialogo_mostrado = False  # Controle do diálogo
+        self.state = "dialogue"  # Estado inicial agora é "dialogue"
+        self.dialogo_mostrado = False  # Controle do diálogo inicial
         self.attack_timer = 0
+        self.dialogue_index = 0  # Índice do diálogo atual
+        self.dialogue_complete = False  # Marca quando o diálogo termina
+
+        # Lista de diálogos
+        self.dialogues = [
+            "Elinaldo, o que faz aqui?",
+            "Não sei",
+            "Então vou acabar com você! Prepare-se"
+        ]
+        self.dialogue_speakers = ["boss", "player", "boss"]  # Quem fala cada linha
 
         self.image = self.idle_anim[self.frame]
         self.rect = self.image.get_rect(center=(x, y))
@@ -61,20 +72,25 @@ class Boss(pygame.sprite.Sprite):
         self.health = 200
         self.all_sprites = all_sprites_group
         self.attack_group = attack_group
-        self.game = game  # Referência ao jogo para acessar `self.mostrar_mensagem`
+        self.game = game  # Referência ao jogo para acessar métodos como `mostrar_mensagem`
+
+        # Carregar a imagem da caixa de diálogo do boss
+        self.boss_dialog_box = pygame.image.load("Caixa_Texto_Com_Foto_Boss.png").convert_alpha()
+        self.boss_dialog_box = pygame.transform.scale(self.boss_dialog_box, (460, 155))  # Mesmo tamanho da caixa do jogador
 
     def update(self):
-        if self.state == "idle":
-            # Mostra o diálogo na tela antes de atacar
+        if self.state == "dialogue":
+            # Exibe os diálogos sequencialmente
             if not self.dialogo_mostrado:
-                self.game.mostrar_mensagem("Prepare-se para enfrentar meu poder!", 120)
+                self.game.mostrar_dialogo_boss(self.dialogues[self.dialogue_index], self.dialogue_speakers[self.dialogue_index])
                 self.dialogo_mostrado = True
-            else:
-                # Após esperar por 5 segundos, muda para o estado de ataque
-                self.attack_timer += 1
-                if self.attack_timer >= FPS * 1.5:  # 1.5 segundos
-                    self.state = "attack"
-                    self.attack_timer = 0
+            # A transição para o próximo diálogo ou estado é tratada no Game
+
+        elif self.state == "idle":
+            self.attack_timer += 1
+            if self.attack_timer >= FPS * 1.5:  # 1.5 segundos
+                self.state = "attack"
+                self.attack_timer = 0
 
         elif self.state == "attack":
             # Controla a animação e os ataques
@@ -103,8 +119,8 @@ class Boss(pygame.sprite.Sprite):
         self.frame = 0
         self.anim_counter = 0
 
-        # >>> GPT: Lança projétil na direção do jogador
-        player = self.game.player  # >>> GPT: Garante que o boss saiba onde está o player
+        # Lança projétil na direção do jogador
+        player = self.game.player
         gust = WindGust(self.rect.centerx, self.rect.bottom, player.rect.centerx, player.rect.centery)
         self.all_sprites.add(gust)
         self.attack_group.add(gust)
@@ -114,3 +130,13 @@ class Boss(pygame.sprite.Sprite):
         pygame.draw.rect(surface, (255, 0, 0), (self.rect.x, self.rect.y - 12, SPRITE_Largura, 8))
         hp_width = SPRITE_Largura * (self.health / 200)
         pygame.draw.rect(surface, (0, 255, 0), (self.rect.x, self.rect.y - 12, hp_width, 8))
+
+    def next_dialogue(self):
+        # Avança para o próximo diálogo ou inicia a luta
+        self.dialogue_index += 1
+        if self.dialogue_index >= len(self.dialogues):
+            self.state = "idle"
+            self.dialogue_complete = True
+            self.dialogo_mostrado = False
+        else:
+            self.dialogo_mostrado = False
