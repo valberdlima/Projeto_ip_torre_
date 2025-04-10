@@ -24,9 +24,8 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
 1. Clone o repositório ou baixe os arquivos do projeto.
 2. Certifique-se de que as imagens e arquivos `.py` estão na estrutura correta:
 
-
-
-
+<br><br> 
+#
 ## Ferramentas, Bibliotecas e Frameworks Utilizados
 ### Bibliotecas
 - **Pygame**  
@@ -45,6 +44,8 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
   - **Uso**: Manipulação de caminhos de arquivos para carregar recursos (imagens, áudio) de forma portátil.  
   - **Justificativa**: Garante compatibilidade entre diferentes sistemas operacionais ao acessar arquivos do jogo.
 
+
+
 ### Ferramentas
 - **Piskel**  
   - **Uso**: Criação e edição de sprites em pixel art, como os do personagem, boss e coletáveis.  
@@ -58,8 +59,8 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
   - **Uso**: Comunicação e colaboração entre a equipe durante o desenvolvimento.  
   - **Justificativa**: Plataforma robusta para reuniões, compartilhamento de arquivos e organização, essencial para coordenar o trabalho em equipe, especialmente de forma remota.
 
- 
-  
+
+#
 ## Estruturação do Código 
 ### Modularização:
 Divisão em arquivos com funções específicas:
@@ -76,7 +77,7 @@ Uso de classes para representar elementos do jogo:
 - **Boss:** Gerencia ataques e diálogos.
 - **WindGust:** Projéteis do boss.
 
-
+#
 
 ## Conceitos utilizados aprendidos na disciplina 
 Durante o desenvolvimento, aplicamos diversos conceitos aprendidos na disciplina, entre eles:
@@ -88,7 +89,7 @@ Durante o desenvolvimento, aplicamos diversos conceitos aprendidos na disciplina
 **Estruturas Condicionais:** Condicionais aparecem no game_loop para verificar colisões (ex.: if jogador_rect.colliderect(coletavel_rect_esq)) e trocar mapas, entre outros momentos.
 
 
-
+#
 ## Maiores desafios e respectivas lições aprendidas 
 **Gestão de Tempo**: Planejar com prazos realistas e margem para imprevistos.
 **Git e Github:** Fazer commits frequentes e usar branches para evitar conflitos.
@@ -96,18 +97,20 @@ Durante o desenvolvimento, aplicamos diversos conceitos aprendidos na disciplina
 **Mecânica do Combate:** Dividir mecânicas complexas em partes menores e testar incrementalmente.
 **Python (POO e Bibliotecas):** Aprofundamos POO (herança, encapsulamento) e aprendemos a usar Pygame, ganhando confiança para explorar novas bibliotecas.
 
-
+<br><br>
 
 ## Membros da Equipe 
-[Elinaldo Emanoel <eemm>](https://github.com/Emanoelmd): responsável pelo desenvolvimento das sprites 
+[Elinaldo Emanoel](https://github.com/Emanoelmd) \<eemm\>: responsável pelo desenvolvimento das sprites e interfaces
 
-[Lucas Francisco <lesaf>](https://github.com/Lucasesaraujo): responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, tela inicial, trilha sonora, colisões. 
+[Lucas Francisco](https://github.com/Lucasesaraujo) \<lesaf\>: responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, tela inicial, trilha sonora, colisões. 
 
-[Júlia Maria <jmcb>](https://github.com/juliamcbezerra): responsável pela ideação, Criação e Ajuste das caixas de diálogo e mensagem de coleta, contador de coleta dos objetos, implementação da mecânica dos coletáveis, Slides da apresentação do projeto e relatório
+[Júlia Maria](https://github.com/juliamcbezerra) \<jmcb\>: responsável pela ideação, Criação e Ajuste das caixas de diálogo e mensagem de coleta, contador de coleta dos objetos, implementação da mecânica dos coletáveis, Slides da apresentação do projeto e relatório
 
-[Millena Ellen <mes4>](https://github.com/ellenpry): Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem 
+[Millena Ellen](https://github.com/ellenpry) \<mes4\>: Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem 
 
-[Valber Roberto <vrl>](https://github.com/valberdlima): Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
+[Valber Roberto](https://github.com/valberdlima) \<vrl\>: Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
 
 
+#
+###### *Projeto referente à matéria de Introdução a programação/CIN-UFPE no periodo de 2024.2.
 
