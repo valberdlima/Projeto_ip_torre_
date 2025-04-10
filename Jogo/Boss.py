@@ -9,8 +9,9 @@ boss_spritesheet = pygame.transform.scale(pygame.image.load("boss spritesheet.pn
 # --- Primeiro, defina as animações do boss ---
 sprites = get_sprites(boss_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)
 
-ANIM_BOSS_IDLE = sprites[26:33]    # linha 0, cols 0–7
-ANIM_BOSS_ATTACK = sprites[182:188]  # linha 1, cols 0–7
+ANIM_BOSS_IDLE = sprites[26:33]
+ANIM_BOSS_ATTACK = sprites[182:188]  
+ANIM_BOSS_MORTE = sprites[260:266] 
 
 # BOSS Classe do projétil de vento ---
 class WindGust(pygame.sprite.Sprite):
@@ -70,7 +71,7 @@ class Boss(pygame.sprite.Sprite):
             else:
                 # Após esperar por 5 segundos, muda para o estado de ataque
                 self.attack_timer += 1
-                if self.attack_timer >= FPS * 5:  # 5 segundos
+                if self.attack_timer >= FPS * 1.5:  # 1.5 segundos
                     self.state = "attack"
                     self.attack_timer = 0
 
@@ -81,10 +82,14 @@ class Boss(pygame.sprite.Sprite):
                 self.frame = (self.frame + 1) % len(self.current_anim)
                 self.image = self.current_anim[self.frame]
 
-            # Temporizador de ataque
-            self.attack_timer += 1
-            if self.attack_timer >= FPS * 2:  # Ataca a cada 2 segundos
+            # Sincroniza o ataque com o final da animação
+            if self.frame == len(self.attack_anim) - 1 and self.anim_counter % 8 == 0:
                 self.attack()
+
+            # Temporizador para pausa entre ataques
+            self.attack_timer += 1
+            if self.attack_timer >= FPS * 1.5:  # Pausa de 1,5 segundos
+                self.state = "idle"
                 self.attack_timer = 0
 
     @property
