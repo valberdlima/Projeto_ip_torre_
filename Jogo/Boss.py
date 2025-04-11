@@ -92,15 +92,18 @@ class Boss(pygame.sprite.Sprite):
         self.boss_dialog_box = pygame.transform.scale(self.boss_dialog_box, (460, 155))  # Mesmo tamanho da caixa do jogador
         self.item_spawned = False  # Controle para spawnar o item apenas uma vez
 
+    # def de dano do boss
     def tomar_dano_boss(self, dano):
         # Impede que o boss tome dano se já estiver morto
         if self.state == "morte":
             return
+         
+         # Reduz a vida do boss
         self.health -= dano
         if self.health <= 0:
             self.health = 0
             self.state = "morte"  # Define o estado como "morte"
-            self.frame = 0
+            self.frame = 0 # Reinicia o frame para a animação de morte
 
     def update(self):
         # Conta o tempo de batalha se o diálogo já terminou
@@ -195,12 +198,13 @@ class Boss(pygame.sprite.Sprite):
             if self.anim_counter % 8 == 0:
                 self.frame = (self.frame + 1) % len(self.current_anim)
                 self.image = self.current_anim[self.frame]
-
+            # Sincroniza o ataque com o final da animação
             if self.frame == len(self.attack_anim) - 1 and self.anim_counter % 8 == 0:
                 self.attack()
-
+                
+            # Temporizador para pausa entre ataques
             self.attack_timer += 1
-            if self.attack_timer >= FPS * 1.5:
+            if self.attack_timer >= FPS * 1.5: # Pausa de 1,5 segundos
                 self.state = "idle"
                 self.attack_timer = 0
 
@@ -212,7 +216,9 @@ class Boss(pygame.sprite.Sprite):
                     self.frame += 1
                     self.image = self.death_anim[self.frame]
             else:
+                # Mantém o último sprite da animação de morte
                 self.image = self.death_anim[-1]
+                # Spawn do item após a morte
                 if not self.item_spawned:
                     self.spawn_item()
                     self.item_spawned = True
@@ -244,21 +250,27 @@ class Boss(pygame.sprite.Sprite):
             gust = WindGust(cx, cy, alvo_x, alvo_y)
             self.all_sprites.add(gust)
             self.attack_group.add(gust)
-
+        
+        #Configurações da barra de vida
     def draw_health_bar(self, surface):
-        # Desenha a barra de vida do boss
+        """Desenha uma barra de vida épica para o boss."""
         if self.state == "morte":
             return
         barra_largura = 400
         barra_altura = 25
-        barra_x = (Largura - barra_largura) // 2
-        barra_y = 50
+        barra_x = (Largura - barra_largura) // 2 # Centraliza horizontalmente
+        barra_y = 50 # Posição vertical da barra
+        # Calcula a proporção da vida restante        
         proporcao_vida = self.health / 200
-        largura_vida = int(barra_largura * proporcao_vida)
+        largura_vida = int(barra_largura * proporcao_vida)  # Vida máxima do boss é 200
+        # Desenha a barra de fundo (preta)
         pygame.draw.rect(surface, (0, 0, 0), (barra_x, barra_y, barra_largura, barra_altura), border_radius=5)
+        # Desenha a barra de vida (vermelha)
         pygame.draw.rect(surface, (200, 0, 0), (barra_x, barra_y, largura_vida, barra_altura), border_radius=5)
+        # Desenha a borda da barra (dourada)        
         pygame.draw.rect(surface, (255, 215, 0), (barra_x, barra_y, barra_largura, barra_altura), 3, border_radius=5)
-        font_nome = pygame.font.Font(None, 36)
+        # Desenha o nome do boss acima da barra        
+        font_nome = pygame.font.Font(None, 36)  # Fonte para o nome do boss
         texto_nome = "Príncipe da Casa dos Pombos"
         texto_surface = font_nome.render(texto_nome, True, (255, 255, 255))
         texto_rect = texto_surface.get_rect(center=(Largura // 2, barra_y - 20))
@@ -276,24 +288,32 @@ class Boss(pygame.sprite.Sprite):
 
     def spawn_item(self):
         # Spawna o livro mágico como um coletável na frente do boss
+        # Calcula a posição do livro mágico (na frente do boss)
         livro_x = self.rect.centerx
-        livro_y = self.rect.bottom + 10
+        livro_y = self.rect.bottom + 10# Ajuste para posicionar na frente do boss
         livro_magico = LivroMagico(livro_x, livro_y, self.game)
+        # Adiciona o coletável ao grupo de sprites        
         self.all_sprites.add(livro_magico)
 
 class LivroMagico(pygame.sprite.Sprite):
-    def __init__(self, x, y, game):
-        super().__init__()
-        # Carrega a imagem do livro mágico
-        self.image = pygame.image.load("livro_magico.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (50, 50))
-        self.rect = self.image.get_rect(center=(x, y))
-        self.game = game
+        """Classe para o coletável Livro Mágico."""
+def __init__(self, x, y, game):
+    super().__init__()
+    # Carrega a imagem do livro mágico
+    self.image = pygame.image.load("livro_magico.png").convert_alpha()
+    self.image = pygame.transform.scale(self.image, (50, 50))
+    self.rect = self.image.get_rect(center=(x, y))
+    self.game = game  # Referência ao jogo para acessar o jogador e lógica de coleta
 
-    def update(self):
-        jogador_rect = self.game.player.rect
-        if self.rect.colliderect(jogador_rect):
-            self.game.contadores_coletaveis["livro"] += 1
-            self.kill()
-            self.game.mostrar_mensagem("Livro Mágico Coletado!", 100)
-            self.game.tela_vitoria()
+
+def update(self):
+    # Verifica colisão com o jogador
+    jogador_rect = self.game.player.rect
+    if self.rect.colliderect(jogador_rect):
+        # Coleta o item (incrementa contador ou realiza ação)            
+        self.game.contadores_coletaveis["livro"] += 1
+        self.kill()
+        
+        # exibe o pop-up de coleta            
+        self.game.mostrar_mensagem("Livro Mágico Coletado!", 100)
+        self.game.tela_vitoria()
