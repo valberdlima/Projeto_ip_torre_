@@ -32,6 +32,10 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
   <img src="Imagens_Jogo_Relatorio/primeiro_mapa.png" alt="Primeiro mapa" width="460"/>
   <img src="Imagens_Jogo_Relatorio/coleta_cajado.png" alt="Coleta de objeto" width="460"/>
   <img src="Imagens_Jogo_Relatorio/ataque_boss.png" alt="Luta com o Boss" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/tela_final.png" alt="Tela Vencedor" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/Game_over.png" alt="Personagem perde/morre" width="460"/>
+
+
 </div>
 
 
