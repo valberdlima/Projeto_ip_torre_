@@ -2,7 +2,7 @@ import pygame
 import pygame.mixer
 from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, font_mensagem, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
 from assets import mapas, player_spritesheet2, player_spritesheet3, sprite_barra_vida
-from player import Player, atualizar_sprites
+from player import Player, Projectplay, atualizar_sprites
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
 from Boss import Boss, WindGust
 
@@ -83,6 +83,8 @@ class Game:
 
         # Variáveis para diálogo do boss
         self.boss_dialogue_active = False
+         
+        self.player_projectiles = pygame.sprite.Group() # Grupo para os projeteis do player
 
     def quebrar_texto(self, texto, largura_max):
         """Divide o texto em linhas para caber na largura máxima."""
@@ -371,7 +373,6 @@ class Game:
                     self.tela.blit(self.boss.image, self.boss.rect)
 
 
-
             if self.mapa_atual == "segundo mapa":
                 colisoes = colisoes_segundo_mapa
             elif self.mapa_atual == "torre":
@@ -418,13 +419,31 @@ class Game:
                                 self.dialogo_frame_contador = 0
                                 if self.boss.dialogue_complete:
                                     self.boss_dialogue_active = False
+                                    
+                    # adicionando um elif pra o ataque
+                    elif event.key == pygame.K_a:  # tecla "A" para atacar
+                        if self.mapa_atual == "torre" and self.boss:
+                            # cria um projetil na posicao do jogador
+                            direcao = 1  # direcao do projetil (1 para direita e -1 para esquerda)
+                            projetil = Projectplay(self.player.x + SPRITE_Largura // 2, self.player.y + SPRITE_Altura // 2, direcao)
+                            self.player_projectiles.add(projetil)
+                
+            # atualiza e desenha os projeteis do jogador
+            self.player_projectiles.update()
+            self.player_projectiles.draw(self.tela)
 
-            if not self.dialogo_ativa:
-                self.player.move(keys, colisoes, self.objetos_coletados)
+            # verifica colisao dos projeteis com o boss
+            for projetil in self.player_projectiles:
+                if self.boss and projetil.rect.colliderect(self.boss.rect):
+                    self.boss.tomar_dano_boss(10)  # causa 10 de dano ao boss
+                    projetil.kill()  # remove o projetil dps da colisao
 
             # desenha o jogador e a barra de vida
             self.player.draw(self.tela)
             self.player.draw_barra_vida(self.tela, sprite_barra_vida)
+            
+            if not self.dialogo_ativa:
+                self.player.move(keys, colisoes, self.objetos_coletados)
 
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):

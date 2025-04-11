@@ -19,6 +19,22 @@ def atualizar_sprites(player, novo_spritesheet):
 
     player.direcao = ANIM_Baixo # Atualiza a direção atual do jogador
 
+# class para os projeteis do player
+class Projectplay(pygame.sprite.Sprite):
+    
+    def __init__(self, x, y, direcao): # def principal do projetil
+        super().__init__() # inicializa
+        projetil_player = pygame.image.load("projetil_player.png").convert_alpha()  # carrega a sprite do projetil
+        self.image = pygame.transform.scale(projetil_player, (72, 72))  # ajusta o tamanho da sprite
+        self.rect = self.image.get_rect(center = (x, y)) # faz um quadrado em volta do projetil
+        self.velocidade = 10 * direcao  # velocidade do projetil (direcao: 1 para direita e -1 para esquerda)
+
+    def update(self): # atualiza o projetil
+        self.rect.x += self.velocidade
+        # remove o projetil se sair da tela
+        if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
+            self.kill()
+
 # Agora a classe herda de Sprite
 class Player(pygame.sprite.Sprite):  
     def __init__(self, x, y):
@@ -119,9 +135,17 @@ class Player(pygame.sprite.Sprite):
         # desenha o sprite da moldura ao redor da barra de vida
         screen.blit(sprite_barra_vida, (moldura_x, moldura_y)) 
     
-    def tomar_dano(self, dano):
+    def tomar_dano(self, dano): # def de dano do jogador
         # reduz a vida do jogador
         self.vida_atual -= dano
         if self.vida_atual <= 0:
             self.vida_atual = 0  # evita valores negativos
-            print("O jogador morreu!")  
+            print("O jogador morreu!")  # terminar o jogo
+            
+    def atacar(self, boss): # def de ataque do jogador
+        # ataca o boss se estiver proximo
+        alcance_ataque = 50  # distancia maxima para o ataque
+        jogador_rect = pygame.Rect(self.x, self.y, SPRITE_Largura, SPRITE_Altura)
+        if jogador_rect.colliderect(boss.rect.inflate(-alcance_ataque, -alcance_ataque)):
+            boss.tomar_dano(10)  # causa 10 de dano ao boss
+            print("Ataque realizado!")

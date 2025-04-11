@@ -77,6 +77,15 @@ class Boss(pygame.sprite.Sprite):
         # Carregar a imagem da caixa de diálogo do boss
         self.boss_dialog_box = pygame.image.load("Caixa_Texto_Com_Foto_Boss.png").convert_alpha()
         self.boss_dialog_box = pygame.transform.scale(self.boss_dialog_box, (460, 155))  # Mesmo tamanho da caixa do jogador
+        
+    # def de dano do boss
+    def tomar_dano_boss(self, dano):
+        # reduz a vida do boss com amesma logica do player
+        self.health -= dano
+        if self.health <= 0:
+            self.health = 0
+            print("Boss derrotado!")  # aqui pra ganhar o jogo
+            self.kill()  # remove o boss do jogo (isso nao vai ficar mas eu tava morrendo o tempo todo pra ele que humilhação)
 
     def update(self):
         if self.state == "dialogue":
@@ -109,7 +118,7 @@ class Boss(pygame.sprite.Sprite):
                 self.state = "idle"
                 self.attack_timer = 0
 
-    @property
+    @property 
     def current_anim(self):
         # Retorna animação atual com base no estado
         return self.attack_anim if self.state == "attack" else self.idle_anim
