@@ -3,7 +3,7 @@ from assets import get_sprites, BOSS_WIND_SPRITESHEET
 from config import SPRITE_Largura, SPRITE_Altura, FPS, Largura, Altura
 import random
 
-boss_spritesheet = pygame.transform.scale(pygame.image.load("boss spritesheet.png"), (832, 3456))
+boss_spritesheet = pygame.transform.scale(pygame.image.load("Sprites\spritesheet_boss.png"), (832, 3456))
 
 # --- Primeiro, defina as animações do boss ---
 sprites = get_sprites(boss_spritesheet, 54, 13, SPRITE_Largura, SPRITE_Altura)
@@ -17,7 +17,7 @@ class WindGust(pygame.sprite.Sprite):
     def __init__(self, x, y, target_x, target_y):
         super().__init__()
         # Carrega e redimensiona a imagem do projétil
-        original_image = pygame.image.load("boss projetil.png").convert_alpha()
+        original_image = pygame.image.load("Sprites\projetil_boss.png").convert_alpha()
         self.image = pygame.transform.scale(original_image, (72, 72))  # Ajuste o tamanho aqui
         self.rect = self.image.get_rect(center=(x, y))
 
@@ -88,7 +88,7 @@ class Boss(pygame.sprite.Sprite):
         self.game = game  # Referência ao jogo para acessar métodos como `mostrar_mensagem`
 
         # Carregar a imagem da caixa de diálogo do boss
-        self.boss_dialog_box = pygame.image.load("Caixa_Texto_Com_Foto_Boss.png").convert_alpha()
+        self.boss_dialog_box = pygame.image.load("Sprites\Caixa_Texto_Com_Foto_Boss.png").convert_alpha()
         self.boss_dialog_box = pygame.transform.scale(self.boss_dialog_box, (460, 155))  # Mesmo tamanho da caixa do jogador
         self.item_spawned = False  # Controle para spawnar o item apenas uma vez
 
@@ -302,7 +302,7 @@ class LivroMagico(pygame.sprite.Sprite):
     def __init__(self, x, y, game):
         super().__init__()
         # Carrega a imagem do livro mágico
-        self.image = pygame.image.load("livro_magico.png").convert_alpha()
+        self.image = pygame.image.load("Sprites\livro_magico.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.rect = self.image.get_rect(center=(x, y))
         self.game = game  # Referência ao jogo para acessar o jogador e lógica de coleta

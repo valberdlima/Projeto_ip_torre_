@@ -24,7 +24,7 @@ class Projectplay(pygame.sprite.Sprite):
     
     def __init__(self, x, y, direcao): # def principal do projetil
         super().__init__() # inicializa
-        projetil_player = pygame.image.load("projetil_player.png").convert_alpha()  # carrega a sprite do projetil
+        projetil_player = pygame.image.load("Sprites\projetil_player.png").convert_alpha()  # carrega a sprite do projetil
         self.image = pygame.transform.scale(projetil_player, (72, 72))  # ajusta o tamanho da sprite
         self.rect = self.image.get_rect(center = (x, y)) # faz um quadrado em volta do projetil
         

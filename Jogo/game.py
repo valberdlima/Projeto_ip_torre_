@@ -18,7 +18,7 @@ class Game:
         # Inicializar o mixer de som
         pygame.mixer.init()
         # Carregar e tocar a música em loop
-        pygame.mixer.music.load("Hobbit OST 8 bits.mp3")  # Substitua pelo nome do arquivo MP3
+        pygame.mixer.music.load("Audios\Hobbit OST 8 bits.mp3")  # Substitua pelo nome do arquivo MP3
         pygame.mixer.music.set_volume(0.05)  # Ajuste o volume (0.0 a 1.0)
         pygame.mixer.music.play(-1)  # -1 faz a música tocar em loop
 
@@ -28,10 +28,10 @@ class Game:
         self.boss          = None
 
         # Carrega os sprites dos coletáveis
-        self.coletavel_img2 = pygame.transform.scale(pygame.image.load("bau_fechado.png"), (46, 36))
-        self.coletavel_img3 = pygame.transform.scale(pygame.image.load("bau_aberto.png"), (46, 36))
-        self.coletavel_img4 = pygame.transform.scale(pygame.image.load("Caveira_Com_Manto.png"), (100, 100))
-        self.coletavel_img5 = pygame.transform.scale(pygame.image.load("Caveira_Sem_Manto.png"), (100, 100))
+        self.coletavel_img2 = pygame.transform.scale(pygame.image.load("Sprites\sprite_bau_fechado.png"), (46, 36))
+        self.coletavel_img3 = pygame.transform.scale(pygame.image.load("Sprites\sprite_bau_aberto.png"), (46, 36))
+        self.coletavel_img4 = pygame.transform.scale(pygame.image.load("Sprites\Caveira_Com_Manto.png"), (100, 100))
+        self.coletavel_img5 = pygame.transform.scale(pygame.image.load("Sprites\Caveira_Sem_Manto.png"), (100, 100))
 
         # Coletáveis por mapa
         self.coletaveis = {
@@ -72,11 +72,11 @@ class Game:
         }
         
         # carregar a imagem da moldura dos contadores
-        self.moldura_coletaveis = pygame.image.load("moldura_coletaveis.png").convert_alpha()
+        self.moldura_coletaveis = pygame.image.load("Sprites\moldura_coletaveis.png").convert_alpha()
         self.moldura_coletaveis = pygame.transform.scale(self.moldura_coletaveis, (300, 150))
                      
         # Carregar a imagem da caixa de diálogo
-        self.caixa_dialogo_img = pygame.image.load("Caixa_Texto_Com_Foto.png").convert_alpha()
+        self.caixa_dialogo_img = pygame.image.load("Sprites\Caixa_Texto_Com_Foto.png").convert_alpha()
         self.caixa_dialogo_largura, self.caixa_dialogo_altura = self.caixa_dialogo_img.get_size()
         self.caixa_dialogo_img = pygame.transform.scale(self.caixa_dialogo_img, (460, 155))  # Ajuste para o tamanho desejado
         self.caixa_dialogo_largura, self.caixa_dialogo_altura = self.caixa_dialogo_img.get_size()
@@ -277,10 +277,10 @@ class Game:
     def tela_inicial(self):
         """Exibe a tela inicial com um botão 'Play'."""
         #fonte_tela_inicial = pygame.font.Font('PressStart2P-Regular.ttf', 40)
-        fonte_botao = pygame.font.Font('PressStart2P-Regular.ttf', 18)
+        fonte_botao = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 18)
 
         # Carregar imagem de fundo
-        fundo = pygame.image.load("Tela inicial do game.png")  # Certifique-se de ter essa imagem no diretório do jogo
+        fundo = pygame.image.load("Sprites\sprite_tela_inicial.png")  # Certifique-se de ter essa imagem no diretório do jogo
         fundo = pygame.transform.scale(fundo, (Largura, Altura))
 
         # Configuração do botão "Play"
@@ -319,7 +319,7 @@ class Game:
             texto_botao = "Iniciar Jogo"
             texto_surface = fonte_botao.render(texto_botao, True, (219, 147, 51))  # Cor principal
             texto_surface_sombra = fonte_botao.render(texto_botao, True, (0, 0, 0))  # Cor do contorno
-            texto_botao_rect = texto_surface.get_rect(center=(botao_x + botao_largura // 2, botao_y + botao_altura // 2))
+            texto_botao_rect = texto_surface.get_rect(center = (botao_x + botao_largura // 2, botao_y + botao_altura // 2))
 
             # Desenhar o contorno (deslocado em várias direções)
             self.tela.blit(texto_surface_sombra, (texto_botao_rect.x - 1, texto_botao_rect.y))  # Esquerda
@@ -337,12 +337,12 @@ class Game:
         while True:
             pygame.time.delay(2000)  # aguarda 2 segundos antes de exibir a tela
             # desenha a tela final
-            tela_final = pygame.image.load("tela_final.png").convert_alpha()
+            tela_final = pygame.image.load("Sprites\sprite_tela_final.png").convert_alpha()
             tela_final = pygame.transform.scale(tela_final, (Largura, Altura))
             self.tela.blit(tela_final, (0, 0))
 
             # resumo das sprites coletadas
-            fonte_resumo = pygame.font.Font('PressStart2P-Regular.ttf', 20)
+            fonte_resumo = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 20)
             texto_resumo = "Resumo das Coletas:"
             resumo_surface = fonte_resumo.render(texto_resumo, True, (255, 255, 255))
             resumo_rect = resumo_surface.get_rect(center = (Largura // 2, Altura // 2))
@@ -377,7 +377,7 @@ class Game:
             self.tela.fill((0, 0, 0))  # preenche a tela com preto
             
             # ajuste o tamanho da fonte para "GAME OVER"
-            fonte_game_over = pygame.font.Font('PressStart2P-Regular.ttf', 80)  # fonte maior
+            fonte_game_over = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 80)  # fonte maior
         
             # texto "Game Over"
             texto_surface = fonte_game_over.render("GAME OVER", True, (225, 0, 0))
@@ -385,7 +385,7 @@ class Game:
             self.tela.blit(texto_surface, texto_rect) # desenha o texto na tela
 
             # resumo das sprites coletadas
-            fonte_resumo = pygame.font.Font('PressStart2P-Regular.ttf', 20)
+            fonte_resumo = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 20)
             texto_resumo = "Resumo das Coletas:"
             resumo_surface = fonte_resumo.render(texto_resumo, True, (255, 255, 255))
             resumo_rect = resumo_surface.get_rect(center = (Largura // 2, Altura // 2))
@@ -589,7 +589,7 @@ class Game:
                     self.player.x = Largura // 2 - 30
                     self.player.y = 780
                     
-                    pygame.mixer.music.load("OST BOSS FIGHT.mp3")
+                    pygame.mixer.music.load("Audios\OST BOSS FIGHT.mp3")
                     pygame.mixer.music.set_volume(0.05)
                     pygame.mixer.music.play(-1)
                     
@@ -610,7 +610,7 @@ class Game:
                     self.player.x = 440
                     self.player.y = 225
 
-                    pygame.mixer.music.load("Hobbit OST 8 bits.mp3")
+                    pygame.mixer.music.load("Audios\Hobbit OST 8 bits.mp3")
                     pygame.mixer.music.set_volume(0.05)
                     pygame.mixer.music.play(-1)
 
@@ -638,8 +638,3 @@ class Game:
         # finaliza o mixer e o pygame   
         pygame.mixer.music.stop()
         pygame.quit()
-
-# executa o jogo
-if __name__ == "__main__":
-    game = Game()
-    game.game_loop()

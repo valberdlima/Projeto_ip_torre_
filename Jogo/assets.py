@@ -3,23 +3,23 @@ from config import Largura, Altura, SPRITE_Largura, SPRITE_Altura, SPRITE_Largur
 
 # carrega as imagens
 mapas = {
-    "primeiro mapa": pygame.transform.scale(pygame.image.load("mapa_1.png"), (Largura, Altura)),
-    "segundo mapa": pygame.transform.scale(pygame.image.load("mapa_2.png"), (Largura, Altura)),
-    "torre": pygame.transform.scale(pygame.image.load("mapa_torre.png"), (Largura, Altura))
+    "primeiro mapa": pygame.transform.scale(pygame.image.load("Sprites\mapa_1.png"), (Largura, Altura)),
+    "segundo mapa": pygame.transform.scale(pygame.image.load("Sprites\mapa_2.png"), (Largura, Altura)),
+    "torre": pygame.transform.scale(pygame.image.load("Sprites\mapa_torre.png"), (Largura, Altura))
 }
 # Player spritesheet
-player_spritesheet = pygame.transform.scale(pygame.image.load("personagem.png"), (832, 3456))
-player_spritesheet2 = pygame.transform.scale(pygame.image.load("Person_Manto.png"), (832, 3456))
-player_spritesheet3 = pygame.transform.scale(pygame.image.load("Person_Manto_Cajado.png"), (832, 3456))
+player_spritesheet = pygame.transform.scale(pygame.image.load("Sprites\personagem.png"), (832, 3456))
+player_spritesheet2 = pygame.transform.scale(pygame.image.load("Sprites\Person_Manto.png"), (832, 3456))
+player_spritesheet3 = pygame.transform.scale(pygame.image.load("Sprites\Person_Manto_Cajado.png"), (832, 3456))
 
 # barra de vida
-sprite_barra_vida = pygame.image.load("sprite_barra_vida.png").convert_alpha()
+sprite_barra_vida = pygame.image.load("Sprites\sprite_barra_vida.png").convert_alpha()
 
 # sprite para um tamanho menor
 sprite_barra_vida = pygame.transform.scale(sprite_barra_vida, (200, 97))  
 
 # Boss Spritesheet
-BOSS_WIND_SPRITESHEET = pygame.image.load("boss_sprites.png").convert_alpha()
+BOSS_WIND_SPRITESHEET = pygame.image.load("Sprites\sprites_boss.png").convert_alpha()
 
 # funcao para carregar os sprites do spritesheet
 def get_sprites(sheet, linhas, colunas, largura, altura):
@@ -62,7 +62,7 @@ def get_sprites(sheet, linhas, colunas, largura, altura):
     return sprites
 
 # BOSS ANIMAÇÃO
-boss_spritesheet = pygame.transform.scale(pygame.image.load("boss spritesheet.png"), (832, 3456))
+boss_spritesheet = pygame.transform.scale(pygame.image.load("Sprites\spritesheet_boss.png"), (832, 3456))
 boss_sprites = get_sprites(boss_spritesheet, 54, 13, SPRITE_Largura_BOSS, SPRITE_Altura_BOSS)
 
 ANIM_BOSS_WALK_DOWN  = boss_sprites[130:139]   # linha 0

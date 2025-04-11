@@ -12,9 +12,9 @@ tela = pygame.display.set_mode((Largura, Altura))
 clock = pygame.time.Clock()
 
 # Configuração da fonte do jogo
-font_dialogo = pygame.font.Font('PressStart2P-Regular.ttf', 15)  # Fonte principal para diálogos
-font_instrucao = pygame.font.Font('PressStart2P-Regular.ttf', 10)  # Fonte menor para [ENTER ou ESPAÇO]
-font_mensagem = pygame.font.Font('PressStart2P-Regular.ttf', 22) # Fonte da mensagem de coleta de itens
+font_dialogo = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 15)  # Fonte principal para diálogos
+font_instrucao = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 10)  # Fonte menor para [ENTER ou ESPAÇO]
+font_mensagem = pygame.font.Font('Fontes\PressStart2P-Regular.ttf', 22) # Fonte da mensagem de coleta de itens
 # Dimensões das sprites
 SPRITE_Largura, SPRITE_Altura = 64, 64
 
