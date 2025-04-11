@@ -41,11 +41,15 @@ ANIM_Esquerda = sprites[117:126]
 ANIM_Direita = sprites[143:152]
 ANIM_Cima = sprites[104:113]
 
+
 sprites2 = get_sprites(player_spritesheet3, 54, 13, SPRITE_Largura, SPRITE_Altura)
-ANIM_Baixo_Ataque = sprites2[78:86]
-ANIM_Esquerda_Ataque = sprites2[65:73]
-ANIM_Direita_Ataque = sprites2[91:99]
-ANIM_Cima_Ataque = sprites2[52:60]
+ANIM_Baixo_Ataque = sprites2[78:87]
+ANIM_Esquerda_Ataque = sprites2[65:74]
+ANIM_Direita_Ataque = sprites2[91:100]
+ANIM_Cima_Ataque = sprites2[52:61]
+
+# animacao de morte
+ANIM_Morte = sprites2[260:266]
 
 # FUNÇÃO DE SLICE
 def get_sprites(sheet, linhas, colunas, largura, altura):
