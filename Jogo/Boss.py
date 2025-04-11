@@ -50,6 +50,7 @@ class Boss(pygame.sprite.Sprite):
         # Redimensiona as animações do boss
         self.idle_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_IDLE]
         self.attack_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_ATTACK]
+        self.death_anim = [pygame.transform.scale(frame, (96, 96)) for frame in ANIM_BOSS_MORTE]
         self.frame = 0
         self.anim_counter = 0
         self.state = "dialogue"  # Estado inicial agora é "dialogue"
@@ -80,11 +81,16 @@ class Boss(pygame.sprite.Sprite):
         
     # def de dano do boss
     def tomar_dano_boss(self, dano):
-        # reduz a vida do boss com amesma logica do player
+        # Impede que o boss tome dano se já estiver morto
+        if self.state == "morte":
+            return
+
+        # Reduz a vida do boss
         self.health -= dano
         if self.health <= 0:
             self.health = 0
-            self.kill()  # remove o boss do jogo pq ele morreu (isso nao vai ficar mas eu tava morrendo o tempo todo pra ele que humilhação)
+            self.state = "morte"  # Define o estado como "morte"
+            self.frame = 0  # Reinicia o frame para a animação de morte
 
     def update(self):
         if self.state == "dialogue":
@@ -116,6 +122,17 @@ class Boss(pygame.sprite.Sprite):
             if self.attack_timer >= FPS * 1.5:  # Pausa de 1,5 segundos
                 self.state = "idle"
                 self.attack_timer = 0
+
+        elif self.state == "morte":
+            # Executa a animação de morte
+            if self.frame < len(self.death_anim) - 1:
+                self.anim_counter += 1
+                if self.anim_counter % 8 == 0:
+                    self.frame += 1
+                    self.image = self.death_anim[self.frame]
+            else:
+                # Mantém o último sprite da animação de morte
+                self.image = self.death_anim[-1]
 
     @property 
     def current_anim(self):
