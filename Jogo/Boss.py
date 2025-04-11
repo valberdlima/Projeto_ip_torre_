@@ -152,6 +152,8 @@ class Boss(pygame.sprite.Sprite):
 
     def draw_health_bar(self, surface):
         # Barra de vida acima do boss
+        if self.state == "morte": # 
+            return
         pygame.draw.rect(surface, (255, 0, 0), (self.rect.x, self.rect.y - 12, SPRITE_Largura, 8))
         hp_width = SPRITE_Largura * (self.health / 200)
         pygame.draw.rect(surface, (0, 255, 0), (self.rect.x, self.rect.y - 12, hp_width, 8))
