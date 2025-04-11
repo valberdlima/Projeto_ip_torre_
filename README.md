@@ -70,6 +70,10 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
   - **Uso**: Fonte de assets gráficos, como mapas e sprites adicionais.  
   - **Justificativa**: Coleção gratuita de alta qualidade, licenciada para uso livre, economizando tempo na criação de gráficos e garantindo consistência visual.
 
+- - **Deepnight**  
+  - **Uso**: Criação e edição de mapas
+  - **Justificativa**: Ferramenta gratuita e intuitiva para pixel art, com suporte a camadas e exportação para PNG, facilitando a integração com o Pygame.
+
 - **Microsoft Teams**  
   - **Uso**: Comunicação e colaboração entre a equipe durante o desenvolvimento.  
   - **Justificativa**: Plataforma robusta para reuniões, compartilhamento de arquivos e organização, essencial para coordenar o trabalho em equipe, especialmente de forma remota.
