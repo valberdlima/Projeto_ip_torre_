@@ -151,12 +151,36 @@ class Boss(pygame.sprite.Sprite):
         self.attack_group.add(gust)
 
     def draw_health_bar(self, surface):
-        # Barra de vida acima do boss
-        if self.state == "morte": # 
+        """Desenha uma barra de vida épica para o boss."""
+        # Configurações da barra de vida
+
+        if self.state == "morte":
             return
-        pygame.draw.rect(surface, (255, 0, 0), (self.rect.x, self.rect.y - 12, SPRITE_Largura, 8))
-        hp_width = SPRITE_Largura * (self.health / 200)
-        pygame.draw.rect(surface, (0, 255, 0), (self.rect.x, self.rect.y - 12, hp_width, 8))
+    
+        barra_largura = 400
+        barra_altura = 25
+        barra_x = (Largura - barra_largura) // 2  # Centraliza horizontalmente
+        barra_y = 50  # Posição vertical da barra
+
+        # Calcula a proporção da vida restante
+        proporcao_vida = self.health / 200  # Vida máxima do boss é 200
+        largura_vida = int(barra_largura * proporcao_vida)
+
+        # Desenha a barra de fundo (preta)
+        pygame.draw.rect(surface, (0, 0, 0), (barra_x, barra_y, barra_largura, barra_altura), border_radius=5)
+
+        # Desenha a barra de vida (vermelha)
+        pygame.draw.rect(surface, (200, 0, 0), (barra_x, barra_y, largura_vida, barra_altura), border_radius=5)
+
+        # Desenha a borda da barra (dourada)
+        pygame.draw.rect(surface, (255, 215, 0), (barra_x, barra_y, barra_largura, barra_altura), 3, border_radius=5)
+
+        # Desenha o nome do boss acima da barra
+        font_nome = pygame.font.Font(None, 36)  # Fonte para o nome do boss
+        texto_nome = "Príncipe da Casa dos Pombos"
+        texto_surface = font_nome.render(texto_nome, True, (255, 255, 255))
+        texto_rect = texto_surface.get_rect(center=(Largura // 2, barra_y - 20))  # Centraliza acima da barra
+        surface.blit(texto_surface, texto_rect)
 
     def next_dialogue(self):
         # Avança para o próximo diálogo ou inicia a luta
