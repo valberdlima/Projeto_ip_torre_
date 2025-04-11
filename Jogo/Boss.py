@@ -309,12 +309,9 @@ class LivroMagico(pygame.sprite.Sprite):
 
 
     def update(self):
-        print("Livro: ", self.rect)
-        print("Player: ", self.game.player.rect)
         # Verifica colisão com o jogador
         jogador_rect = self.game.player.rect
         if self.rect.colliderect(jogador_rect):
-            print("PEGOU!")
             # Coleta o item (incrementa contador ou realiza ação)            
             self.game.contadores_coletaveis["livro"] += 1
             self.kill()
