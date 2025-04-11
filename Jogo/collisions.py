@@ -45,8 +45,14 @@ colisoes_terceiro_mapa = [
     pygame.Rect(0, 0, 200, 100),         # Parede superior esquerda
     pygame.Rect(720, 0, 200, 100),       # Parede superior direita
     pygame.Rect(900, 0, 1, 1200),        # Parede direita
-    pygame.Rect(0, 800, 430, 1),         # Parede inferior esquerda
-    pygame.Rect(560, 800, 500, 1),       # Parede inferior direita
+    pygame.Rect(0, 780, 430, 1),         # Parede inferior esquerda
+    pygame.Rect(560, 780, 500, 1),       # Parede inferior direita
+
+
+    pygame.Rect(50, 700, 200, 150),         # Bloco inferior esquerda
+    pygame.Rect(50, 600, 75, 150),
+
+
     pygame.Rect(0, 190, 200, 130),       # Lago superior esquerdo
     pygame.Rect(280, 190, 100, 80),      # Buraco central superior esquerdo
     pygame.Rect(320, 400, 80, 80),       # Buraco central inferior esquerdo

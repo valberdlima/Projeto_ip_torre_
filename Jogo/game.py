@@ -620,7 +620,7 @@ class Game:
                     self.player.y = Altura // 2 + 35
                     self.player.x = 15
 
-                elif self.player.y <= 25:
+                elif self.player.y <= 25 and 500 < self.player.x < 600:
                     self.mapa_atual = "terceiro mapa"
                     self.player.y = 700
                     self.player.x = 480
@@ -667,7 +667,7 @@ class Game:
                         self.boss = None
 
             elif self.mapa_atual == "terceiro mapa":
-                if self.player.y == 700:  
+                if self.player.y == 720:  
                     self.mapa_atual = "primeiro mapa"  
                     self.player.x = 550  
                     self.player.y = 25
