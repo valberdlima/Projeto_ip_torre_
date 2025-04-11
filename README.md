@@ -84,6 +84,7 @@ Divisão em arquivos com funções específicas:
 - **player.py**: Lógica do jogador.
 - **Boss.py**: Lógica do boss.
 - **game.py**: Loop principal.
+- **main.py**: roda o jogo
 
 ### Orientação a Objetos:
 Uso de classes para representar elementos do jogo:
