@@ -32,8 +32,8 @@ class Game:
         self.coletavel_img3 = pygame.transform.scale(pygame.image.load("Sprites\sprite_bau_aberto.png"), (46, 36))
         self.coletavel_img4 = pygame.transform.scale(pygame.image.load("Sprites\Caveira_Com_Manto.png"), (100, 100))
         self.coletavel_img5 = pygame.transform.scale(pygame.image.load("Sprites\Caveira_Sem_Manto.png"), (100, 100))
-        self.coletavel_img6 = pygame.transform.scale(pygame.image.load("Chave.png"), (30, 30))
-        self.coletavel_img7 = pygame.transform.scale(pygame.image.load("Chave_Coletada.png"), (30, 30))
+        self.coletavel_img6 = pygame.transform.scale(pygame.image.load("Sprites\Chave.png"), (30, 30))
+        self.coletavel_img7 = pygame.transform.scale(pygame.image.load("Sprites\Chave_Coletada.png"), (30, 30))
 
         # Coletáveis por mapa
         # o "pos" define a posição do item no mapa.
