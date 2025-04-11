@@ -31,7 +31,11 @@ Você é um aprendiz em busca dos lendários itens da Ordem dos Discretos: o Man
   <img src="Imagens_Jogo_Relatorio/tela_inicial.png" alt="Tela Inicial" width="460"/>
   <img src="Imagens_Jogo_Relatorio/primeiro_mapa.png" alt="Primeiro mapa" width="460"/>
   <img src="Imagens_Jogo_Relatorio/coleta_cajado.png" alt="Coleta de objeto" width="460"/>
-  <img src="Imagens_Jogo_Relatorio/ataque_boss.png" alt="Luta com o Boss" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/fight.png" alt="Luta com o Boss" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/tela_win.png" alt="Personagem ganha" width="460"/>
+  <img src="Imagens_Jogo_Relatorio/Game_over.png" alt="Personagem perde/morre" width="460"/>
+
+
 </div>
 
 
@@ -110,15 +114,15 @@ Durante o desenvolvimento, aplicamos diversos conceitos aprendidos na disciplina
 <br><br>
 
 ## Membros da Equipe 
-[Elinaldo Emanoel](https://github.com/Emanoelmd) \<eemm\>: responsável pelo desenvolvimento das sprites e interfaces, acompanhamentos do projeto
+[Elinaldo Emanoel](https://github.com/Emanoelmd) \<eemm\>: responsável pelo desenvolvimento das sprites e interfaces, acompanhamentos do projeto, implementação do terceiro mapa 
 
-[Lucas Francisco](https://github.com/Lucasesaraujo) \<lesaf\>: responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, tela inicial, trilha sonora, colisões. 
+[Lucas Francisco](https://github.com/Lucasesaraujo) \<lesaf\>: responsável pela ideação, implementação da movimentação e animação do player, construção dos mapas e transições, da tela inicial, da trilha sonora, e das colisões, correção dos bugs e atualização da barra de vida do boss 
 
 [Júlia Maria](https://github.com/juliamcbezerra) \<jmcb\>: responsável pela ideação, Criação e Ajuste das caixas de diálogo e mensagem de coleta, contador de coleta dos objetos, implementação da mecânica dos coletáveis, Slides da apresentação do projeto e relatório
 
-[Millena Ellen](https://github.com/ellenpry) \<mes4\>: Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem, aprimoramento do contador de coletáveis, 
+[Millena Ellen](https://github.com/ellenpry) \<mes4\>: Responsável pela Modularização do código e tornar o código orientado à objetos, desenvolvimento de sprites, implementação da mecânica de vida do personagem, aprimoramento do contador de coletáveis, realização dos finais do jogo 
 
-[Valber Roberto](https://github.com/valberdlima) \<vrl\>: Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação dos sistemas de ataque e melhorias.
+[Valber Roberto](https://github.com/valberdlima) \<vrl\>: Criação do repositório no GitHub e organização inicial do projeto, Desenvolvimento do Planner para acompanhamento das tarefas, Organização e condução das reuniões no Microsoft Teams, Criação do BOSS do jogo e implementação da mecânica de combate (sistemas de ataque e melhorias).
 
 
 #
