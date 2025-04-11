@@ -332,6 +332,45 @@ class Game:
             
             pygame.display.update()
 
+    def tela_vitoria(self):
+        # exibe a tela de vitoria com o resumo das sprites coletadas
+        while True:
+            pygame.time.delay(2000)  # aguarda 2 segundos antes de exibir a tela
+            # desenha a tela final
+            tela_final = pygame.image.load("tela_final.png").convert_alpha()
+            tela_final = pygame.transform.scale(tela_final, (Largura, Altura))
+            self.tela.blit(tela_final, (0, 0))
+
+            # resumo das sprites coletadas
+            fonte_resumo = pygame.font.Font('PressStart2P-Regular.ttf', 20)
+            texto_resumo = "Resumo das Coletas:"
+            resumo_surface = fonte_resumo.render(texto_resumo, True, (255, 255, 255))
+            resumo_rect = resumo_surface.get_rect(center = (Largura // 2, Altura // 2))
+            self.tela.blit(resumo_surface, resumo_rect)
+
+            # exibe os contadores de cada coletavel
+            margem_y = Altura // 2 + 50
+            espacamento = 40
+            for i, (coletavel, contador) in enumerate(self.contadores_coletaveis.items()):
+                texto = f"{coletavel.capitalize()}: {contador}"
+                texto_surface = fonte_resumo.render(texto, True, (255, 255, 255))
+                texto_rect = texto_surface.get_rect(center = (Largura // 2, margem_y + i * espacamento))
+                self.tela.blit(texto_surface, texto_rect)
+
+            # instrucao para sair
+            texto_instrucao = "Pressione [ESC] para sair"
+            instrucao_surface = fonte_resumo.render(texto_instrucao, True, (200, 200, 200))
+            instrucao_rect = instrucao_surface.get_rect(center=(Largura // 2, Altura - 50))
+            self.tela.blit(instrucao_surface, instrucao_rect)
+
+            pygame.display.update()
+
+            # verifica eventos para sair
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                    pygame.quit()
+                    exit()
+
     def tela_game_over(self):
         # mostra a tela de Game Over com o resumo das sprites coletadas
         while True:

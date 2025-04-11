@@ -227,4 +227,7 @@ class LivroMagico(pygame.sprite.Sprite):
             # Coleta o item (incrementa contador ou realiza ação)
             self.game.contadores_coletaveis["livro"] += 1
             self.kill()  # Remove o item do jogo
-            self.game.mostrar_mensagem("Você coletou o Livro Mágico!", 120)  # Mensagem opcional
+
+            # exibe o pop-up de coleta
+            self.game.mostrar_mensagem("Livro Mágico Coletado!", 100)  # dura 2 segundos
+            self.game.tela_vitoria()  # exibe a tela de vitoria
