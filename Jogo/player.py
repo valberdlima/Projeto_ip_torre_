@@ -27,12 +27,27 @@ class Projectplay(pygame.sprite.Sprite):
         projetil_player = pygame.image.load("projetil_player.png").convert_alpha()  # carrega a sprite do projetil
         self.image = pygame.transform.scale(projetil_player, (72, 72))  # ajusta o tamanho da sprite
         self.rect = self.image.get_rect(center = (x, y)) # faz um quadrado em volta do projetil
-        self.velocidade = 10 * direcao  # velocidade do projetil (direcao: 1 para direita e -1 para esquerda)
+        
+        # define a velocidade com base na direcao
+        if direcao == ANIM_Direita_Ataque:
+            self.velocidade_x, self.velocidade_y = 8, 0
+        elif direcao == ANIM_Esquerda_Ataque:
+            self.velocidade_x, self.velocidade_y = -8, 0
+        elif direcao == ANIM_Cima_Ataque:
+            self.velocidade_x, self.velocidade_y = 0, -8
+        elif direcao == ANIM_Baixo_Ataque:
+            self.velocidade_x, self.velocidade_y = 0, 8
+        else:
+            self.velocidade_x, self.velocidade_y = 0, -8  # padrao pra cima
 
     def update(self): # atualiza o projetil
-        self.rect.x += self.velocidade
+        # movimento continuo do projetil
+        self.rect.x += self.velocidade_x
+        self.rect.y += self.velocidade_y
+        
         # remove o projetil se sair da tela
-        if self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width():
+        if (self.rect.right < 0 or self.rect.left > pygame.display.get_surface().get_width() or
+            self.rect.bottom < 0 or self.rect.top > pygame.display.get_surface().get_height()):
             self.kill()
 
 # Agora a classe herda de Sprite
@@ -45,6 +60,7 @@ class Player(pygame.sprite.Sprite):
         self.frame = 0
         self.direcao = ANIM_Baixo
         self.animacao_contador = 0  # Contador para controlar a animação
+        self.tempo_ataque = 0  # contador para controlar o tempo de ataque
 
         # Cria imagem e rect para usar com grupos do pygame
         self.image = self.direcao[self.frame]
@@ -61,6 +77,13 @@ class Player(pygame.sprite.Sprite):
         movendo = False
         atacando = False
         novo_x, novo_y = self.x, self.y
+        
+        if self.tempo_ataque > 0: # fica atualizando o tempo de ataque
+            self.tempo_ataque -= 1
+        
+        # atualiza imagem e rect com o novo frame e posição
+        self.image = self.direcao[self.frame]
+        self.rect.topleft = (self.x, self.y)
 
         # Verifica as teclas pressionadas e atualiza a posição do jogador
         if keys[pygame.K_LEFT]:
@@ -101,15 +124,15 @@ class Player(pygame.sprite.Sprite):
         # Controla a taxa de atualização da animação
         if movendo or atacando:
             self.animacao_contador += 1
-            if self.animacao_contador % 5 == 0:  # Atualiza o frame a cada 5 ciclos
+            if self.animacao_contador % 4 == 0:  # Atualiza o frame a cada 4 ciclos
                 self.frame = (self.frame + 1) % len(self.direcao)
         else:
             self.frame = 0
             self.animacao_contador = 0  # Reseta o contador quando parado
-
-        # Atualiza imagem e rect com o novo frame e posição
-        self.image = self.direcao[self.frame]
-        self.rect.topleft = (self.x, self.y)
+        
+        # atualiza o tempo de ataque
+        if self.animacao_contador % 4 == 0:  # atualiza o frame a cada 4 ciclos
+            self.frame = (self.frame + 1) % len(self.direcao)  # garante que o indice esteja dentro dos limites
 
     def draw(self, screen):
         screen.blit(self.direcao[self.frame], (self.x, self.y))
@@ -140,7 +163,7 @@ class Player(pygame.sprite.Sprite):
         self.vida_atual -= dano
         if self.vida_atual <= 0:
             self.vida_atual = 0  # evita valores negativos
-            print("O jogador morreu!")  # terminar o jogo
+            # ai ele morre
             
     def atacar(self, boss): # def de ataque do jogador
         # ataca o boss se estiver proximo

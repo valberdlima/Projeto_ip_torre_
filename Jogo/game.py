@@ -2,7 +2,7 @@ import pygame
 import pygame.mixer
 from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, font_mensagem, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
 from assets import mapas, player_spritesheet2, player_spritesheet3, sprite_barra_vida
-from player import Player, Projectplay, atualizar_sprites
+from player import Player, Projectplay, atualizar_sprites, ANIM_Baixo_Ataque, ANIM_Esquerda_Ataque, ANIM_Direita_Ataque, ANIM_Cima_Ataque
 from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
 from Boss import Boss, WindGust
 
@@ -372,7 +372,6 @@ class Game:
                     # Desenha o boss parado durante o diálogo
                     self.tela.blit(self.boss.image, self.boss.rect)
 
-
             if self.mapa_atual == "segundo mapa":
                 colisoes = colisoes_segundo_mapa
             elif self.mapa_atual == "torre":
@@ -383,7 +382,9 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
+                    
                 elif event.type == pygame.KEYDOWN:
+                    
                     if event.key in [pygame.K_RETURN, pygame.K_SPACE]:
                         if self.dialogo_ativa:
                             if self.dialogo_letra_contador < len(self.dialogo_atual_lista[self.dialogo_atual]):
@@ -422,12 +423,18 @@ class Game:
                                     
                     # adicionando um elif pra o ataque
                     elif event.key == pygame.K_a:  # tecla "A" para atacar
-                        if self.mapa_atual == "torre" and self.boss:
-                            # cria um projetil na posicao do jogador
-                            direcao = 1  # direcao do projetil (1 para direita e -1 para esquerda)
-                            projetil = Projectplay(self.player.x + SPRITE_Largura // 2, self.player.y + SPRITE_Altura // 2, direcao)
-                            self.player_projectiles.add(projetil)
-                
+                        if self.mapa_atual == "torre" and self.boss and self.player.tempo_ataque == 0:
+                            # cria o projetil com base na direcao do jogador
+                            projetil = Projectplay(
+                                self.player.x + SPRITE_Largura // 2,
+                                self.player.y + SPRITE_Altura // 2,
+                                self.player.direcao  # passa a direcao diretamente
+                            )
+                            self.player_projectiles.add(projetil) # adiciona o projetil ao grupo
+                            # reinicia o contador de ataque do jogador
+                            self.player.tempo_ataque = 10
+                            
+                                    
             # atualiza e desenha os projeteis do jogador
             self.player_projectiles.update()
             self.player_projectiles.draw(self.tela)
@@ -490,11 +497,13 @@ class Game:
                 self.mapa_atual = "segundo mapa"
                 self.player.y = Altura // 2 + 35
                 self.player.x = 15
+                
             elif self.mapa_atual == "segundo mapa":
                 if self.player.x <= 5:
                     self.mapa_atual = "primeiro mapa"
                     self.player.y = Altura // 2 - 20
                     self.player.x = 950
+                    
                 elif 420 < self.player.x < 460 and self.player.y <= 225:
                     self.mapa_atual = "torre"
                     self.player.x = Largura // 2 - 30
@@ -531,6 +540,7 @@ class Game:
                         self.boss_attacks.empty()
                         self.boss = None
 
+            # chamando as defs
             self.desenhar_mensagem()
             if self.boss_dialogue_active and self.boss and not self.boss.dialogue_complete:
                 self.mostrar_dialogo_boss(self.boss.dialogues[self.boss.dialogue_index], self.boss.dialogue_speakers[self.boss.dialogue_index])
@@ -538,10 +548,11 @@ class Game:
             self.desenhar_contadores_separados()  # desenha a moldura e os contadores
             pygame.display.update()
             
-            
+        # finaliza o mixer e o pygame   
         pygame.mixer.music.stop()
         pygame.quit()
 
+# executa o jogo
 if __name__ == "__main__":
     game = Game()
     game.game_loop()

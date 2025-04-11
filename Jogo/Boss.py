@@ -84,8 +84,7 @@ class Boss(pygame.sprite.Sprite):
         self.health -= dano
         if self.health <= 0:
             self.health = 0
-            print("Boss derrotado!")  # aqui pra ganhar o jogo
-            self.kill()  # remove o boss do jogo (isso nao vai ficar mas eu tava morrendo o tempo todo pra ele que humilhação)
+            self.kill()  # remove o boss do jogo pq ele morreu (isso nao vai ficar mas eu tava morrendo o tempo todo pra ele que humilhação)
 
     def update(self):
         if self.state == "dialogue":
