@@ -78,31 +78,13 @@ class Player(pygame.sprite.Sprite):
         movendo = False
         atacando = False
         novo_x, novo_y = self.x, self.y
-        
-        if self.tempo_ataque > 0: # fica atualizando o tempo de ataque
+
+        if self.tempo_ataque > 0:  # fica atualizando o tempo de ataque
             self.tempo_ataque -= 1
-        
+
         # atualiza imagem e rect com o novo frame e posição
         self.image = self.direcao[self.frame]
         self.rect.topleft = (self.x, self.y)
-
-        # Verifica as teclas pressionadas e atualiza a posição do jogador
-        if keys[pygame.K_LEFT]:
-            novo_x -= player_velocidade
-            self.direcao = ANIM_Esquerda
-            movendo = True
-        if keys[pygame.K_RIGHT]:
-            novo_x += player_velocidade
-            self.direcao = ANIM_Direita
-            movendo = True
-        if keys[pygame.K_UP]:
-            novo_y -= player_velocidade
-            self.direcao = ANIM_Cima
-            movendo = True
-        if keys[pygame.K_DOWN]:
-            novo_y += player_velocidade
-            self.direcao = ANIM_Baixo
-            movendo = True
 
         # Verifica se o jogador está atacando
         if keys[pygame.K_a] and objetos_coletados > 1:  # Tecla de ataque
@@ -115,6 +97,26 @@ class Player(pygame.sprite.Sprite):
                 self.direcao = ANIM_Direita_Ataque
             elif self.direcao == ANIM_Cima:
                 self.direcao = ANIM_Cima_Ataque
+
+        # Permite movimento apenas se não estiver atacando
+        if not atacando:
+            # Verifica as teclas pressionadas e atualiza a posição do jogador
+            if keys[pygame.K_LEFT]:
+                novo_x -= player_velocidade
+                self.direcao = ANIM_Esquerda
+                movendo = True
+            if keys[pygame.K_RIGHT]:
+                novo_x += player_velocidade
+                self.direcao = ANIM_Direita
+                movendo = True
+            if keys[pygame.K_UP]:
+                novo_y -= player_velocidade
+                self.direcao = ANIM_Cima
+                movendo = True
+            if keys[pygame.K_DOWN]:
+                novo_y += player_velocidade
+                self.direcao = ANIM_Baixo
+                movendo = True
 
         # Verifica colisões
         jogador_rect = pygame.Rect(novo_x, novo_y, SPRITE_Largura, SPRITE_Altura)
@@ -130,11 +132,11 @@ class Player(pygame.sprite.Sprite):
         else:
             self.frame = 0
             self.animacao_contador = 0  # Reseta o contador quando parado
-        
-        # atualiza o tempo de ataque
-        if self.animacao_contador % 4 == 0:  # atualiza o frame a cada 4 ciclos
-            self.frame = (self.frame + 1) % len(self.direcao)  # garante que o indice esteja dentro dos limites
-        #repassa as informações para o rect
+
+        # Atualiza o tempo de ataque
+        if self.animacao_contador % 4 == 0:  # Atualiza o frame a cada 4 ciclos
+            self.frame = (self.frame + 1) % len(self.direcao)  # Garante que o índice esteja dentro dos limites
+        # Repassa as informações para o rect
         self.rect.topleft = (self.x, self.y)
 
     def draw(self, screen):
