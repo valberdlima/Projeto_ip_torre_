@@ -1,6 +1,6 @@
 import pygame
 from config import SPRITE_Largura, SPRITE_Altura, player_velocidade
-from assets import get_sprites, ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima, ANIM_Baixo_Ataque, ANIM_Esquerda_Ataque, ANIM_Direita_Ataque, ANIM_Cima_Ataque, sprite_barra_vida
+from assets import get_sprites, ANIM_Baixo, ANIM_Esquerda, ANIM_Direita, ANIM_Cima, ANIM_Baixo_Ataque, ANIM_Esquerda_Ataque, ANIM_Direita_Ataque, ANIM_Cima_Ataque, ANIM_Morte, mapas, sprite_barra_vida
 
 # Função para atualizar sprites
 def atualizar_sprites(player, novo_spritesheet):
@@ -61,6 +61,7 @@ class Player(pygame.sprite.Sprite):
         self.direcao = ANIM_Baixo
         self.animacao_contador = 0  # Contador para controlar a animação
         self.tempo_ataque = 0  # contador para controlar o tempo de ataque
+        self.morte = False  # controle de morte do jogador
 
         # Cria imagem e rect para usar com grupos do pygame
         self.image = self.direcao[self.frame]
@@ -172,3 +173,13 @@ class Player(pygame.sprite.Sprite):
         if jogador_rect.colliderect(boss.rect.inflate(-alcance_ataque, -alcance_ataque)):
             boss.tomar_dano(10)  # causa 10 de dano ao boss
             print("Ataque realizado!")
+    
+    def morrer(self, tela, clock): # def de morte do jogador
+        # reproduz a animacao de morte do jogador
+        self.animacao_morte = True
+        for frame in ANIM_Morte:
+            tela.blit(mapas["torre"], (0, 0))
+            tela.blit(frame, (self.x, self.y))  # desenha o frame da animacao
+            pygame.display.update()
+            clock.tick(6)  # controla a velocidade da animacao
+        self.animacao_morte = False
