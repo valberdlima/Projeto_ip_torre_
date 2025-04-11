@@ -105,11 +105,11 @@ Durante o desenvolvimento, aplicamos diversos conceitos aprendidos na disciplina
 
 #
 ## Maiores desafios e respectivas lições aprendidas 
-**Gestão de Tempo**: Planejar com prazos realistas e margem para imprevistos.
-**Git e Github:** Fazer commits frequentes e usar branches para evitar conflitos.
-**Design da Interface**: Prototipar interfaces antes da implementação para ajustar layouts.
-**Mecânica do Combate:** Dividir mecânicas complexas em partes menores e testar incrementalmente.
-**Python (POO e Bibliotecas):** Aprofundamos POO (herança, encapsulamento) e aprendemos a usar Pygame, ganhando confiança para explorar novas bibliotecas.
+- **Gestão de Tempo**: Planejar com prazos realistas e margem para imprevistos.
+- **Git e Github:** Fazer commits frequentes e usar branches para evitar conflitos.
+- **Design da Interface**: Prototipar interfaces antes da implementação para ajustar layouts.
+- **Mecânica do Combate:** Dividir mecânicas complexas em partes menores e testar incrementalmente.
+- **Python (POO e Bibliotecas):** Aprofundamos POO (herança, encapsulamento) e aprendemos a usar Pygame, ganhando confiança para explorar novas bibliotecas.
 
 <br><br>
 
