@@ -134,6 +134,8 @@ class Player(pygame.sprite.Sprite):
         # atualiza o tempo de ataque
         if self.animacao_contador % 4 == 0:  # atualiza o frame a cada 4 ciclos
             self.frame = (self.frame + 1) % len(self.direcao)  # garante que o indice esteja dentro dos limites
+        #repassa as informações para o rect
+        self.rect.topleft = (self.x, self.y)
 
     def draw(self, screen):
         screen.blit(self.direcao[self.frame], (self.x, self.y))

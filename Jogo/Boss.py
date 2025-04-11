@@ -294,26 +294,35 @@ class Boss(pygame.sprite.Sprite):
         livro_magico = LivroMagico(livro_x, livro_y, self.game)
         # Adiciona o coletável ao grupo de sprites        
         self.all_sprites.add(livro_magico)
+        
 
 class LivroMagico(pygame.sprite.Sprite):
-        """Classe para o coletável Livro Mágico."""
-def __init__(self, x, y, game):
-    super().__init__()
-    # Carrega a imagem do livro mágico
-    self.image = pygame.image.load("livro_magico.png").convert_alpha()
-    self.image = pygame.transform.scale(self.image, (50, 50))
-    self.rect = self.image.get_rect(center=(x, y))
-    self.game = game  # Referência ao jogo para acessar o jogador e lógica de coleta
+    """Classe para o coletável Livro Mágico."""
+
+    def __init__(self, x, y, game):
+        super().__init__()
+        # Carrega a imagem do livro mágico
+        self.image = pygame.image.load("livro_magico.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.rect = self.image.get_rect(center=(x, y))
+        self.game = game  # Referência ao jogo para acessar o jogador e lógica de coleta
 
 
-def update(self):
-    # Verifica colisão com o jogador
-    jogador_rect = self.game.player.rect
-    if self.rect.colliderect(jogador_rect):
-        # Coleta o item (incrementa contador ou realiza ação)            
-        self.game.contadores_coletaveis["livro"] += 1
-        self.kill()
-        
-        # exibe o pop-up de coleta            
-        self.game.mostrar_mensagem("Livro Mágico Coletado!", 100)
-        self.game.tela_vitoria()
+    def update(self):
+        print("Livro: ", self.rect)
+        print("Player: ", self.game.player.rect)
+        # Verifica colisão com o jogador
+        jogador_rect = self.game.player.rect
+        if self.rect.colliderect(jogador_rect):
+            print("PEGOU!")
+            # Coleta o item (incrementa contador ou realiza ação)            
+            self.game.contadores_coletaveis["livro"] += 1
+            self.kill()
+            
+            # Exibe o pop-up de coleta            
+            self.game.mostrar_mensagem("Livro Mágico Coletado!", 100)
+
+            # Garante que a tela de vitória só será chamada uma vez
+            if not hasattr(self.game, "vitoria_exibida") or not self.game.vitoria_exibida:
+                self.game.vitoria_exibida = True
+                self.game.tela_vitoria()
