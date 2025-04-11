@@ -583,14 +583,17 @@ class Game:
                             self.contadores_coletaveis["chave"] += 1
                             self.objetos_coletados += 1
 
-                    if (self.mapa_atual == "segundo mapa" and index == 1 and len(self.coletaveis[self.mapa_atual]) > 1 and self.coletaveis["segundo mapa"][0]["coletado"] and self.contadores_coletaveis.get("chave", 0) > 0):
-                        if jogador_rect.colliderect(coletavel_rect_bau):
-                            coletavel["coletado"] = True
-                            self.mostrar_mensagem("Cajado da Vacuidade coletado!", 120)
-                            atualizar_sprites(self.player, player_spritesheet3)
-                            self.contadores_coletaveis["cajado"] += 1  # Incrementa o contador do cajado
-                            self.objetos_coletados += 1
-                    
+                    if (self.mapa_atual == "segundo mapa" and index == 1 and len(self.coletaveis[self.mapa_atual]) > 1):
+                        if self.coletaveis["segundo mapa"][0]["coletado"] and self.contadores_coletaveis.get("chave", 0) > 0:
+                            if jogador_rect.colliderect(coletavel_rect_bau):
+                                coletavel["coletado"] = True
+                                self.mostrar_mensagem("Cajado da Vacuidade coletado!", 120)
+                                atualizar_sprites(self.player, player_spritesheet3)
+                                self.contadores_coletaveis["cajado"] += 1  # Incrementa o contador do cajado
+                                self.objetos_coletados += 1
+                        elif jogador_rect.colliderect(coletavel_rect_bau):
+                            self.mostrar_mensagem("Você deve encontrar a chave!", 120)
+                                
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
                 if index == 1 and self.mapa_atual == "segundo mapa":
                     if not coletavel["coletado"]:
