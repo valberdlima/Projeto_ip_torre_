@@ -5,7 +5,8 @@ from config import Largura, Altura, SPRITE_Largura, SPRITE_Altura, SPRITE_Largur
 mapas = {
     "primeiro mapa": pygame.transform.scale(pygame.image.load("Sprites\mapa_1.png"), (Largura, Altura)),
     "segundo mapa": pygame.transform.scale(pygame.image.load("Sprites\mapa_2.png"), (Largura, Altura)),
-    "torre": pygame.transform.scale(pygame.image.load("Sprites\mapa_torre.png"), (Largura, Altura))
+    "torre": pygame.transform.scale(pygame.image.load("Sprites\mapa_torre.png"), (Largura, Altura)),
+    "terceiro mapa": pygame.transform.scale(pygame.image.load("mapa_3.png"), (Largura, Altura))
 }
 # Player spritesheet
 player_spritesheet = pygame.transform.scale(pygame.image.load("Sprites\personagem.png"), (832, 3456))

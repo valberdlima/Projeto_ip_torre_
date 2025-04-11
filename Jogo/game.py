@@ -3,7 +3,7 @@ import pygame.mixer
 from config import Largura, Altura, FPS, tela, clock, font_dialogo, font_instrucao, font_mensagem, SPRITE_Largura, SPRITE_Altura, DIALOGO_VELOCIDADE, DIALOGO_MARGEM, DIALOGO_CAIXA_X, DIALOGO_CAIXA_Y, DIALOGO_CAIXA_LARGURA_MAX, DIALOGO_CAIXA_ALTURA_MIN
 from assets import mapas, player_spritesheet2, player_spritesheet3, sprite_barra_vida
 from player import Player, Projectplay, atualizar_sprites, ANIM_Baixo_Ataque, ANIM_Esquerda_Ataque, ANIM_Direita_Ataque, ANIM_Cima_Ataque
-from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa
+from collisions import colisoes_segundo_mapa, colisoes_mapa_torre, colisoes_primeiro_mapa, colisoes_terceiro_mapa
 from Boss import Boss, WindGust
 
 class Game:
@@ -22,7 +22,7 @@ class Game:
         pygame.mixer.music.set_volume(0.05)  # Ajuste o volume (0.0 a 1.0)
         pygame.mixer.music.play(-1)  # -1 faz a música tocar em loop
 
-        ##boss_até entrar na torre
+        #boss_até entrar na torre
         self.all_sprites   = pygame.sprite.Group()
         self.boss_attacks  = pygame.sprite.Group()
         self.boss          = None
@@ -32,13 +32,19 @@ class Game:
         self.coletavel_img3 = pygame.transform.scale(pygame.image.load("Sprites\sprite_bau_aberto.png"), (46, 36))
         self.coletavel_img4 = pygame.transform.scale(pygame.image.load("Sprites\Caveira_Com_Manto.png"), (100, 100))
         self.coletavel_img5 = pygame.transform.scale(pygame.image.load("Sprites\Caveira_Sem_Manto.png"), (100, 100))
+        self.coletavel_img6 = pygame.transform.scale(pygame.image.load("Chave.png"), (30, 30))
+        self.coletavel_img7 = pygame.transform.scale(pygame.image.load("Chave_Coletada.png"), (30, 30))
 
         # Coletáveis por mapa
+        # o "pos" define a posição do item no mapa.
         self.coletaveis = {
             "primeiro mapa": [],
             "segundo mapa": [
                 {"pos": (200, 180), "coletado": False},
                 {"pos": (750, 470), "coletado": False}
+            ],
+            "terceiro mapa": [
+                {"pos": (550, 35), "coletado": False}
             ],
             "torre": []
         }
@@ -66,9 +72,10 @@ class Game:
         self.objetos_coletados = 0
         # Inicializar os contadores de cada coletável
         self.contadores_coletaveis = {
-            "manto": 0,
+            "chave": 0,
             "cajado": 0,
-            "livro": 0  
+            "manto": 0,
+            "livro": 0 
         }
         
         # carregar a imagem da moldura dos contadores
@@ -237,7 +244,7 @@ class Game:
 
     def desenhar_contadores_separados(self):
         # desenha a moldura dos coletaveis e os contadores abaixo de cada icone
-        margem_x = 700  # margem direita
+        margem_x = 650  # margem direita
         margem_y = 10  # margem superior
         espacamento_entre_icones = 66  # espaco horizontal entre os contadores
         contador_y_offset = 110  # espaco vertical entre a moldura e o contador
@@ -247,6 +254,7 @@ class Game:
 
         # lista de contadores para cada coletavel
         contadores = [
+            self.contadores_coletaveis["chave"],
             self.contadores_coletaveis["cajado"],
             self.contadores_coletaveis["manto"],
             self.contadores_coletaveis["livro"]
@@ -256,7 +264,7 @@ class Game:
         for i, contador in enumerate(contadores):
             texto = f"{contador}"
             texto_surface = font_mensagem.render(texto, True, (255, 255, 255))
-            texto_rect = texto_surface.get_rect(center=(margem_x + 86 + i * espacamento_entre_icones, margem_y + contador_y_offset))
+            texto_rect = texto_surface.get_rect(center=(margem_x + 52 + i * espacamento_entre_icones, margem_y + contador_y_offset))
             self.tela.blit(texto_surface, texto_rect)
 
     def transicao(self, duracao, tipo="fade-in"):
@@ -452,12 +460,14 @@ class Game:
                     # Desenha o boss parado durante o diálogo
                     self.tela.blit(self.boss.image, self.boss.rect)
 
-            if self.mapa_atual == "segundo mapa":
-                colisoes = colisoes_segundo_mapa
-            elif self.mapa_atual == "torre":
-                colisoes = colisoes_mapa_torre
-            else:
+            if self.mapa_atual == "primeiro mapa":
                 colisoes = colisoes_primeiro_mapa
+            elif self.mapa_atual == "segundo mapa":
+                colisoes = colisoes_segundo_mapa
+            elif self.mapa_atual == "terceiro mapa":
+                colisoes = colisoes_terceiro_mapa
+            else:
+                colisoes = colisoes_mapa_torre
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -483,12 +493,23 @@ class Game:
                                             self.contadores_coletaveis["manto"] += 1  # Incrementa o contador do manto
                                             self.objetos_coletados += 1
                                             self.coleta_pendente = None
+                                            
                                         self.dialogo_caveira_ativa = False
                                         self.dialogo_atual_lista = self.dialogo_textos
+
+                                    elif self.mapa_atual == "terceiro mapa" and self.coleta_pendente is not None:
+                                        coletavel = self.coletaveis["terceiro mapa"][self.coleta_pendente]
+                                        coletavel["coletado"] = True
+                                        self.mostrar_mensagem("Você encontrou a chave", 120)
+                                        self.contadores_coletaveis["chave"] += 1  # se estiver usando um contador específico
+                                        self.objetos_coletados += 1
+                                        self.coleta_pendente = None
+
                                 else:
                                     self.dialogo_letra_contador = 0
                                     self.dialogo_texto_atual = ""
                                     self.dialogo_frame_contador = 0
+
                         elif self.boss_dialogue_active and self.boss and not self.boss.dialogue_complete:
                             if self.dialogo_letra_contador < len(self.boss.dialogues[self.boss.dialogue_index]):
                                 self.dialogo_letra_contador = len(self.boss.dialogues[self.boss.dialogue_index])
@@ -533,12 +554,15 @@ class Game:
                 self.player.move(keys, colisoes, self.objetos_coletados)
 
             jogador_rect = pygame.Rect(self.player.x, self.player.y, SPRITE_Largura, SPRITE_Altura)
+
             for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
-                
+
                 if not coletavel["coletado"]:
                     coletavel_rect_bau = self.coletavel_img2.get_rect(topleft=coletavel["pos"])
                     coletavel_rect_esq = self.coletavel_img4.get_rect(topleft=coletavel["pos"])
+                    coletavel_rect_key = self.coletavel_img6.get_rect(topleft=coletavel["pos"])
 
+                    # Lógica de interação com coletável no segundo mapa
                     if index == 0 and self.mapa_atual == "segundo mapa" and not self.dialogo_caveira_ativa and not self.dialogo_ativa:
                         proximidade_rect = coletavel_rect_esq.inflate(100, 100)
                         if jogador_rect.colliderect(proximidade_rect):
@@ -551,32 +575,52 @@ class Game:
                             self.dialogo_frame_contador = 0
                             self.coleta_pendente = index
 
-                    if coletavel == self.coletaveis[self.mapa_atual][1]:
-                        if jogador_rect.colliderect(coletavel_rect_bau) and self.coletaveis["segundo mapa"][0]["coletado"]:
+                    # Lógica de interação com coletável no terceiro mapa
+                    if index == 0 and self.mapa_atual == "terceiro mapa":
+                        if jogador_rect.colliderect(coletavel_rect_key):
+                            coletavel["coletado"] = True
+                            self.mostrar_mensagem("Você encontrou a chave", 120)
+                            self.contadores_coletaveis["chave"] += 1
+                            self.objetos_coletados += 1
+
+                    if (self.mapa_atual == "segundo mapa" and index == 1 and len(self.coletaveis[self.mapa_atual]) > 1 and self.coletaveis["segundo mapa"][0]["coletado"] and self.contadores_coletaveis.get("chave", 0) > 0):
+                        if jogador_rect.colliderect(coletavel_rect_bau):
                             coletavel["coletado"] = True
                             self.mostrar_mensagem("Cajado da Vacuidade coletado!", 120)
                             atualizar_sprites(self.player, player_spritesheet3)
                             self.contadores_coletaveis["cajado"] += 1  # Incrementa o contador do cajado
                             self.objetos_coletados += 1
                     
-                    
-            for coletavel in self.coletaveis[self.mapa_atual]:
-                
-                if coletavel == self.coletaveis[self.mapa_atual][1]:
+            for index, coletavel in enumerate(self.coletaveis[self.mapa_atual]):
+                if index == 1 and self.mapa_atual == "segundo mapa":
                     if not coletavel["coletado"]:
                         self.tela.blit(self.coletavel_img2, coletavel["pos"])
                     else:
                         self.tela.blit(self.coletavel_img3, coletavel["pos"])
+
+                elif self.mapa_atual == "terceiro mapa":
+                    if not coletavel["coletado"]:
+                        self.tela.blit(self.coletavel_img6, coletavel["pos"])
+                    else:
+                        self.tela.blit(self.coletavel_img7, coletavel["pos"])
+
                 else:
                     if not coletavel["coletado"]:
                         self.tela.blit(self.coletavel_img4, coletavel["pos"])
                     else:
                         self.tela.blit(self.coletavel_img5, coletavel["pos"])
 
-            if self.mapa_atual == "primeiro mapa" and self.player.x >= 970:
-                self.mapa_atual = "segundo mapa"
-                self.player.y = Altura // 2 + 35
-                self.player.x = 15
+            #Bloco de manipulação de mapas
+            if self.mapa_atual == "primeiro mapa":
+                if self.player.x >= 970:
+                    self.mapa_atual = "segundo mapa"
+                    self.player.y = Altura // 2 + 35
+                    self.player.x = 15
+
+                elif self.player.y == 0:
+                    self.mapa_atual = "terceiro mapa"
+                    self.player.y = 700
+                    self.player.x = 480
                 
             elif self.mapa_atual == "segundo mapa":
                 if self.player.x <= 5:
@@ -604,7 +648,6 @@ class Game:
                     self.all_sprites.add(self.boss)  
                       
             elif self.mapa_atual == "torre":
-                
                 if 415 < self.player.x < 600 and self.player.y >= 790:
                     self.mapa_atual = "segundo mapa"
                     self.player.x = 440
