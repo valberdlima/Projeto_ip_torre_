@@ -78,6 +78,7 @@ class Boss(pygame.sprite.Sprite):
         # Carregar a imagem da caixa de diálogo do boss
         self.boss_dialog_box = pygame.image.load("Caixa_Texto_Com_Foto_Boss.png").convert_alpha()
         self.boss_dialog_box = pygame.transform.scale(self.boss_dialog_box, (460, 155))  # Mesmo tamanho da caixa do jogador
+        self.item_spawned = False  # Controle para spawnar o item apenas uma vez
         
     # def de dano do boss
     def tomar_dano_boss(self, dano):
@@ -134,6 +135,11 @@ class Boss(pygame.sprite.Sprite):
                 # Mantém o último sprite da animação de morte
                 self.image = self.death_anim[-1]
 
+                # Spawn do item após a morte
+                if not self.item_spawned:
+                    self.spawn_item()
+                    self.item_spawned = True
+
     @property 
     def current_anim(self):
         # Retorna animação atual com base no estado
@@ -151,12 +157,36 @@ class Boss(pygame.sprite.Sprite):
         self.attack_group.add(gust)
 
     def draw_health_bar(self, surface):
-        # Barra de vida acima do boss
-        if self.state == "morte": # 
+        """Desenha uma barra de vida épica para o boss."""
+        # Configurações da barra de vida
+
+        if self.state == "morte":
             return
-        pygame.draw.rect(surface, (255, 0, 0), (self.rect.x, self.rect.y - 12, SPRITE_Largura, 8))
-        hp_width = SPRITE_Largura * (self.health / 200)
-        pygame.draw.rect(surface, (0, 255, 0), (self.rect.x, self.rect.y - 12, hp_width, 8))
+    
+        barra_largura = 400
+        barra_altura = 25
+        barra_x = (Largura - barra_largura) // 2  # Centraliza horizontalmente
+        barra_y = 50  # Posição vertical da barra
+
+        # Calcula a proporção da vida restante
+        proporcao_vida = self.health / 200  # Vida máxima do boss é 200
+        largura_vida = int(barra_largura * proporcao_vida)
+
+        # Desenha a barra de fundo (preta)
+        pygame.draw.rect(surface, (0, 0, 0), (barra_x, barra_y, barra_largura, barra_altura), border_radius=5)
+
+        # Desenha a barra de vida (vermelha)
+        pygame.draw.rect(surface, (200, 0, 0), (barra_x, barra_y, largura_vida, barra_altura), border_radius=5)
+
+        # Desenha a borda da barra (dourada)
+        pygame.draw.rect(surface, (255, 215, 0), (barra_x, barra_y, barra_largura, barra_altura), 3, border_radius=5)
+
+        # Desenha o nome do boss acima da barra
+        font_nome = pygame.font.Font(None, 36)  # Fonte para o nome do boss
+        texto_nome = "Príncipe da Casa dos Pombos"
+        texto_surface = font_nome.render(texto_nome, True, (255, 255, 255))
+        texto_rect = texto_surface.get_rect(center=(Largura // 2, barra_y - 20))  # Centraliza acima da barra
+        surface.blit(texto_surface, texto_rect)
 
     def next_dialogue(self):
         # Avança para o próximo diálogo ou inicia a luta
@@ -167,3 +197,34 @@ class Boss(pygame.sprite.Sprite):
             self.dialogo_mostrado = False
         else:
             self.dialogo_mostrado = False
+
+    def spawn_item(self):
+        """Spawna o livro mágico como um coletável na frente do boss."""
+        # Calcula a posição do livro mágico (na frente do boss)
+        livro_x = self.rect.centerx
+        livro_y = self.rect.bottom + 10  # Ajuste para posicionar na frente do boss
+
+        # Cria o coletável Livro Mágico
+        livro_magico = LivroMagico(livro_x, livro_y, self.game)
+
+        # Adiciona o coletável ao grupo de sprites
+        self.all_sprites.add(livro_magico)
+
+class LivroMagico(pygame.sprite.Sprite):
+    """Classe para o coletável Livro Mágico."""
+    def __init__(self, x, y, game):
+        super().__init__()
+        # Carrega a imagem do livro mágico
+        self.image = pygame.image.load("livro_magico.png").convert_alpha()
+        self.image = pygame.transform.scale(self.image, (50, 50))  # Ajuste o tamanho conforme necessário
+        self.rect = self.image.get_rect(center=(x, y))
+        self.game = game  # Referência ao jogo para acessar o jogador e lógica de coleta
+
+    def update(self):
+        # Verifica colisão com o jogador
+        jogador_rect = self.game.player.rect
+        if self.rect.colliderect(jogador_rect):
+            # Coleta o item (incrementa contador ou realiza ação)
+            self.game.contadores_coletaveis["livro"] += 1
+            self.kill()  # Remove o item do jogo
+            self.game.mostrar_mensagem("Você coletou o Livro Mágico!", 120)  # Mensagem opcional

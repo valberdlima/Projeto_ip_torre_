@@ -161,7 +161,7 @@ class Player(pygame.sprite.Sprite):
     
     def tomar_dano(self, dano): # def de dano do jogador
         # reduz a vida do jogador
-        self.vida_atual -= dano
+        self.vida_atual -= dano + 10
         if self.vida_atual <= 0:
             self.vida_atual = 0  # evita valores negativos
             # ai ele morre

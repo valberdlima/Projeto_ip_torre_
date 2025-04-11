@@ -393,24 +393,22 @@ class Game:
                     self.dialogo_texto_atual = ""
                     self.dialogo_frame_contador = 0
 
-                # 1) Atualiza animações do boss e projéteis apenas após o diálogo
+                  # Atualiza animações do boss e projéteis apenas após o diálogo
                 if self.boss.dialogue_complete:
                     self.all_sprites.update()
                     self.all_sprites.draw(self.tela)
-                    self.boss.draw_health_bar(self.tela)
+                    self.boss.draw_health_bar(self.tela)  # Desenha a barra de vida do boss
 
-                    # 4) Checa colisão projétil ↔ jogador
+                    # Checa colisão projétil ↔ jogador
                     jogador_rect = pygame.Rect(
                         self.player.x, self.player.y,
                         SPRITE_Largura, SPRITE_Altura
                     )
-                    
-                    # fiz alteracao para a vida do personagem diminuir
-                    for gust in self.boss_attacks:  # percorrer os projeteis do boss
-                        if gust.rect.colliderect(jogador_rect):  # verifica colisao com o jogador
-                            self.player.tomar_dano(10)  # reduz a vida do jogador em 10
-                            self.mostrar_mensagem("HAHA! Você morrerá", 60)  # exibe uma mensagem
-                            gust.kill()  # remove o projetil dps da colisao
+                    for gust in self.boss_attacks:  # Percorrer os projéteis do boss
+                        if gust.rect.colliderect(jogador_rect):  # Verifica colisão com o jogador
+                            self.player.tomar_dano(10)  # Reduz a vida do jogador em 10
+                            self.mostrar_mensagem("HAHA! Você morrerá", 60)  # Exibe uma mensagem
+                            gust.kill()  # Remove o projétil após a colisão
                 else:
                     # Desenha o boss parado durante o diálogo
                     self.tela.blit(self.boss.image, self.boss.rect)
